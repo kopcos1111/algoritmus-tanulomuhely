@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A három algoritmizálási feladat összegzése és önértékelése.">
+  <title>Összegzés | Algoritmus Tanulóműhely</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="summary-page">
+  <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>Algoritmus Tanulóműhely</span></a>
+    <nav aria-label="Fő navigáció"><a href="index.html">Kezdőlap</a><a href="madarmegfigyeles.html">1. feladat</a><a href="filmfesztival.html">2. feladat</a><a href="varosok-es-jaratok.html">3. feladat</a><a class="active" href="osszegzes.html">Összegzés</a></nav>
+  </header>
+
+  <main id="tartalom" class="summary-main">
+    <section class="summary-hero">
+      <p class="eyebrow">A tananyag lezárása</p>
+      <h1>Mit tanultunk?</h1>
+      <p class="lead">Három különböző problémát oldottunk meg. Most nézzük meg, milyen algoritmikus módszereket használtunk, és mi volt a legfontosabb gondolat mindegyiknél.</p>
+    </section>
+
+    <section class="summary-section">
+      <p class="step-kicker">01 · Rendszerezés</p>
+      <h2>A három feladat legfontosabb módszerei</h2>
+      <div class="method-grid">
+        <article class="method-card"><span aria-hidden="true">🐦</span><h3>Madármegfigyelés</h3><p>Lista bejárása, megszámlálás, maximumkiválasztás és a holtverseny kezelése.</p></article>
+        <article class="method-card"><span aria-hidden="true">🎬</span><h3>Filmfesztivál</h3><p>Rendezés befejezési idő szerint, majd mohó választás az egymást nem átfedő filmek közül.</p></article>
+        <article class="method-card"><span aria-hidden="true">✈️</span><h3>Városok és járatok</h3><p>Irányított gráf tárolása, mélységi bejárás veremmel és a fordított gráf vizsgálata.</p></article>
+      </div>
+    </section>
+
+    <section class="summary-section">
+      <p class="step-kicker">02 · Felidézés</p>
+      <h2>Gondold át, majd nézd meg a választ!</h2>
+      <p>Először próbáld meg egy mondatban megfogalmazni a választ. Csak ezután nyisd le a magyarázatot.</p>
+      <div class="recall-list">
+        <details><summary>1. Holtverseny esetén melyik madárfajt választjuk?</summary><div>A kisebb fajazonosítót. A program csak akkor cseréli le az eredményt, ha szigorúan nagyobb gyakoriságot talál, ezért az azonos gyakoriságú, nagyobb sorszámú faj nem írja felül.</div></details>
+        <details><summary>2. Miért a befejezési idő szerint rendezzük a filmeket?</summary><div>Mert a leghamarabb befejeződő film után marad a legtöbb szabad idő további filmek kiválasztására. A legkorábbi kezdés vagy a legrövidebb film önmagában nem garantálja a legtöbb megtekinthető filmet.</div></details>
+        <details><summary>3. Miért járjuk be a fordított gráfot is?</summary><div>Az eredeti gráfban azt ellenőrizzük, hogy az 1-es városból mindenhová eljutunk-e. A fordított gráf bejárása pedig azt mutatja meg, hogy az eredeti járatokkal minden városból vissza lehet-e jutni az 1-esbe.</div></details>
+      </div>
+    </section>
+
+    <section class="summary-section">
+      <p class="step-kicker">03 · Önértékelés</p>
+      <h2>Hol tartasz most?</h2>
+      <div class="self-check" id="self-check">
+        <label><input type="radio" name="reflection" value="ertem"> Mindhárom feladat lényegét értem.</label>
+        <label><input type="radio" name="reflection" value="atnezem"> Van olyan rész, amit még egyszer átnéznék.</label>
+        <label><input type="radio" name="reflection" value="segitseg"> Valamelyik feladatnál még segítségre lenne szükségem.</label>
+      </div>
+      <button class="button primary" id="reflection-button" type="button">Válasz rögzítése</button>
+      <p class="reflection-result" id="reflection-result" role="status"></p>
+    </section>
+
+    <section class="summary-section">
+      <p class="step-kicker">04 · Alkalmazás</p>
+      <h2>Mit csinálnál egy új feladatnál?</h2>
+      <div class="transfer-question"><strong>Gondolkodtató kérdés</strong><p>Honnan ismernéd fel, hogy egy új problémánál megszámlálásra, rendezésre vagy gráfbejárásra van szükség?</p></div>
+      <p>Nincs egyetlen bemagolandó válasz. Először azt kell megfigyelni, mit kér a feladat, milyen adatokat kapunk, és milyen kapcsolat van közöttük. Csak ezután választunk algoritmust.</p>
+      <div class="summary-actions"><a class="button primary" href="index.html">Vissza a kezdőlapra</a><a class="button secondary" href="madarmegfigyeles.html">Feladatok újrakezdése</a></div>
+    </section>
+  </main>
+
+  <footer><p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p></footer>
+  <script>
+    document.getElementById('reflection-button').addEventListener('click', function () {
+      const selected = document.querySelector('input[name="reflection"]:checked');
+      const result = document.getElementById('reflection-result');
+      const messages = {
+        ertem: 'Rendben. Próbáld meg egy új feladatnál is felismerni, melyik tanult módszer használható!',
+        atnezem: 'Jó, hogy ezt felismerted. Nyisd meg újra azt a feladatot, amelyiknél még bizonytalan vagy!',
+        segitseg: 'Ez teljesen rendben van. Nézd át újra a kézi példát és az algoritmus animációját, majd próbáld meg még egyszer!'
+      };
+      result.textContent = selected ? messages[selected.value] : 'Előbb jelölj meg egy választ!';
+      result.classList.add('show');
+    });
+  </script>
+</body>
+</html>

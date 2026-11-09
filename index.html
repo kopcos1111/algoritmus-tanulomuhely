@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Önállóan feldolgozható algoritmizálási tananyag különböző évfolyamok számára.">
+  <title>Algoritmus Tanulóműhely</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Algoritmus Tanulóműhely kezdőlap">
+      <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+      <span>Algoritmus Tanulóműhely</span>
+    </a>
+    <nav class="home-nav" aria-label="Fő navigáció">
+      <a class="active" href="index.html">Kezdőlap</a>
+      <a href="madarmegfigyeles.html">1. feladat</a>
+      <a href="filmfesztival.html">2. feladat</a>
+      <a href="varosok-es-jaratok.html">3. feladat</a>
+      <a href="osszegzes.html">Összegzés</a>
+    </nav>
+  </header>
+
+  <main id="tartalom">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Algoritmizálás és problémamegoldás tanítása</p>
+        <h1>Tanulj algoritmusokat<br><span>lépésről lépésre!</span></h1>
+        <p class="lead">Három fokozatosan nehezedő feladat, amelyet saját tempódban dolgozhatsz fel. Előbb gondolkodunk, aztán algoritmust tervezünk, végül Pythonban is megoldjuk.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="madarmegfigyeles.html">Tanulás megkezdése</a>
+          <a class="button secondary" href="#hogyan">Hogyan használd?</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="Az önálló tanulás négy lépése">
+        <div class="code-window">
+          <div class="window-dots"><i></i><i></i><i></i></div>
+          <pre><code><span class="c-purple">for</span> feladat <span class="c-purple">in</span> tananyag:
+    <span class="c-blue">gondolkodj</span>()
+    <span class="c-blue">tervezz</span>()
+    <span class="c-blue">programozz</span>()
+    <span class="c-green">ellenőrizd</span>()</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="hogyan">
+      <div class="section-heading">
+        <p class="eyebrow">Önálló tanulási útvonal</p>
+        <h2>Így haladj a feladatokkal</h2>
+        <p>Ne ugorj rögtön a kész kódhoz. A lépések egymásra épülnek, és minden szakaszban ellenőrizheted a tudásodat.</p>
+      </div>
+      <ol class="learning-path">
+        <li><span>01</span><div><strong>Értsd meg</strong><p>Olvasd el a problémát, és fogalmazd meg, mi a feladat.</p></div></li>
+        <li><span>02</span><div><strong>Próbáld ki</strong><p>Dolgozz fel kézzel egy rövid példát.</p></div></li>
+        <li><span>03</span><div><strong>Tervezd meg</strong><p>Fedezd fel az algoritmus lépéseit.</p></div></li>
+        <li><span>04</span><div><strong>Programozd le</strong><p>Egészítsd ki a kezdőkódot, és teszteld.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="section tasks-section" id="feladatok">
+      <div class="section-heading">
+        <p class="eyebrow">Feladatsor</p>
+        <h2>Válassz tanulási modult</h2>
+        <p>A feladatok nehézségi sorrendben követik egymást.</p>
+      </div>
+      <div class="task-grid">
+        <article class="task-card available">
+          <div class="task-top"><span class="task-number">01</span><span class="pill easy">Könnyű</span></div>
+          <div class="task-icon bird" aria-hidden="true">🐦</div>
+          <p class="task-grade">7–8. évfolyam · 15–20 perc</p>
+          <h3>Madármegfigyelés</h3>
+          <p>Találd meg a leggyakrabban megfigyelt madárfajt, és kezeld helyesen a holtversenyt.</p>
+          <ul class="tag-list" aria-label="Témakörök"><li>listák</li><li>számlálás</li><li>maximumkeresés</li></ul>
+          <a class="card-link" href="madarmegfigyeles.html">Feladat megnyitása <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="task-card available">
+          <div class="task-top"><span class="task-number">02</span><span class="pill medium">Közepes</span></div>
+          <div class="task-icon camera" aria-hidden="true">🎬</div>
+          <p class="task-grade">9–10. évfolyam · 20–25 perc</p>
+          <h3>Filmfesztivál</h3>
+          <p>Válassz ki minél több filmet úgy, hogy mindegyiket elejétől a végéig meg tudd nézni.</p>
+          <ul class="tag-list" aria-label="Témakörök"><li>rendezés</li><li>intervallumok</li><li>mohó algoritmus</li></ul>
+          <a class="card-link" href="filmfesztival.html">Feladat megnyitása <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="task-card available">
+          <div class="task-top"><span class="task-number">03</span><span class="pill hard">Haladó</span></div>
+          <div class="task-icon route" aria-hidden="true">✈️</div>
+          <p class="task-grade">11. évfolyam · 25–30 perc</p>
+          <h3>Városok és járatok</h3>
+          <p>Döntsd el, hogy bármely városból el lehet-e jutni bármely másikba az egyirányú járatokkal.</p>
+          <ul class="tag-list" aria-label="Témakörök"><li>gráf</li><li>DFS</li><li>fordított gráf</li></ul>
+          <a class="card-link" href="varosok-es-jaratok.html">Feladat megnyitása <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <article class="summary-card">
+        <div class="task-icon summary" aria-hidden="true">✓</div>
+        <div>
+          <p class="eyebrow">A tananyag lezárása</p>
+          <h3>Mit viszel magaddal a három feladatból?</h3>
+          <p>Rendszerezd a tanult módszereket, idézd fel a legfontosabb döntéseket, majd gondold át, melyik részt néznéd át még egyszer.</p>
+        </div>
+        <a class="button primary" href="osszegzes.html">Tovább az összegzéshez</a>
+      </article>
+    </section>
+
+    <section class="section compact-info">
+      <div><strong>3</strong><span>egymásra épülő feladat</span></div>
+      <div><strong>Azonnali</strong><span>visszajelzés</span></div>
+      <div><strong>3 szintű</strong><span>segítség</span></div>
+      <div><strong>Saját tempó</strong><span>önálló feldolgozás</span></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p>
+  </footer>
+</body>
+</html>

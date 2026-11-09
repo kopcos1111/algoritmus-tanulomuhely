@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Filmfesztivál – önállóan feldolgozható mohó algoritmus 9–10. évfolyam számára.">
+  <title>Filmfesztivál | Algoritmus Tanulóműhely</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="lesson-page">
+  <a class="skip-link" href="#lecke">Ugrás a leckéhez</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>Algoritmus Tanulóműhely</span></a>
+    <nav aria-label="Fő navigáció"><a href="index.html">Kezdőlap</a><a href="madarmegfigyeles.html">1. feladat</a><a class="active" href="filmfesztival.html">2. feladat</a><a href="varosok-es-jaratok.html">3. feladat</a><a href="osszegzes.html">Összegzés</a></nav>
+  </header>
+
+  <div class="progress-shell" aria-label="Tanulási előrehaladás">
+    <div class="progress-meta"><span>2. modul · Filmfesztivál</span><strong id="progress-label">0% kész</strong></div>
+    <div class="progress-track"><div id="progress-bar"></div></div>
+  </div>
+
+  <main id="lecke" class="lesson-layout">
+    <aside class="lesson-nav" aria-label="A lecke részei">
+      <p class="eyebrow">Tartalom</p>
+      <a href="#celok">1. Tanulási cél</a><a href="#problema">2. A probléma</a><a href="#kezi">3. Kézi feldolgozás</a><a href="#algoritmus">4. Az algoritmus</a><a href="#programozas">5. Programozás</a><a href="#futasido">6. Futási idő</a><a href="#ellenorzes">7. Önellenőrzés</a><a href="#tovabblepes">8. Továbbgondolás</a>
+      <button class="reset-progress" id="reset-progress" type="button">Haladás törlése</button>
+    </aside>
+
+    <article class="lesson-content">
+      <section class="lesson-hero tracked" id="celok" data-step="celok">
+        <div><p class="eyebrow">2. feladat · 9–10. évfolyam</p><h1>Filmfesztivál</h1><p class="lead">Hogyan lehet minél több filmet megnézni, ha egyes vetítések időben átfedik egymást?</p><div class="lesson-meta"><span>◷ 20–25 perc</span><span>● Közepes</span><span>⌁ Python</span></div></div>
+        <div class="goal-box"><h2>Mire lesz szükséged a megoldáshoz?</h2><ul class="check-list"><li>kezdési és befejezési időket párokban tárolni;</li><li>a filmeket befejezési idő szerint rendezni;</li><li>megérteni, miért ezt a filmet választjuk következőnek;</li><li>meghatározni az algoritmus futási idejét.</li></ul></div>
+        <button class="mark-done" type="button" data-complete="celok">Elolvastam, kezdhetjük</button>
+      </section>
+
+      <section class="lesson-section tracked" id="problema" data-step="problema">
+        <p class="step-kicker">02 · A probléma megértése</p><h2>Hány filmet tudunk végignézni?</h2>
+        <p>Egy filmfesztiválon több filmet vetítenek. Minden filmnél ismerjük a kezdés és a befejezés időpontját. Egy filmet csak akkor számíthatunk be, ha az elejétől a végéig megnézzük.</p>
+        <div class="callout story"><span aria-hidden="true">▶</span><div><strong>A feladat</strong><p>Határozd meg, legfeljebb hány filmet lehet teljes egészében megnézni! Ha egy film pontosan akkor kezdődik, amikor az előző véget ér, akkor mindkettő belefér.</p></div></div>
+        <h3>Bemenet formátuma</h3><p>Az első sorban az <code>n</code> szám áll, vagyis a filmek száma. Ezután <code>n</code> sor következik. Minden sorban két egész szám van: a film kezdési és befejezési ideje.</p>
+        <div class="io-grid"><div class="io-card"><span>Példabemenet</span><code>3<br>3 5<br>4 9<br>5 8</code><p>Három film van: 3–5, 4–9 és 5–8.</p></div><div class="io-card output"><span>Kimenet</span><strong>2</strong><p>A 3–5 és az 5–8 filmet is végig lehet nézni.</p></div></div>
+        <p class="learning-note"><strong>Fontos:</strong> a CSES oldalán a programnak a teljes bemenetet be kell olvasnia. Az első sor a filmek számát tartalmazza, ezután minden film kezdési és befejezési ideje külön sorban következik. A tanulóoldal futtatható része is ezt a bemeneti formát használja. A magyarázatokban a könnyebb áttekinthetőség érdekében Python-listaként is megjelenítjük a filmeket, például: <code>[(3, 5), (4, 9), (5, 8)]</code>.</p>
+        <div class="source-box"><strong>Eredeti feladat:</strong> <a href="https://cses.fi/problemset/task/1629/" target="_blank" rel="noopener">CSES – Movie Festival ↗</a></div>
+        <button class="mark-done" type="button" data-complete="problema">Értem a feladatot</button>
+      </section>
+
+      <section class="lesson-section tracked" id="kezi" data-step="kezi">
+        <p class="step-kicker">03 · Dolgozd fel kézzel!</p><h2>Előbb gondolkodjunk program nélkül</h2>
+        <p>Nézd meg a három vetítést! A 3–5 film után az 5–8 film még belefér, a 4–9 viszont átfedné mindkettőt.</p>
+        <div class="movie-list" aria-label="A filmek kezdési és befejezési időpontjai">
+          <div class="movie-time-card"><strong>1. film</strong><span><small>Kezdés</small><b>3</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>5</b></span></div>
+          <div class="movie-time-card"><strong>2. film</strong><span><small>Kezdés</small><b>4</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>9</b></span></div>
+          <div class="movie-time-card"><strong>3. film</strong><span><small>Kezdés</small><b>5</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>8</b></span></div>
+        </div>
+        <fieldset class="quiz-card" data-question="manual"><legend>1. Legfeljebb hány filmet lehet végignézni?</legend><label><input type="radio" name="manual" value="1"> 1 filmet</label><label><input type="radio" name="manual" value="2"> 2 filmet</label><label><input type="radio" name="manual" value="3"> 3 filmet</label><button class="check-answer" type="button" data-answer="2" data-target="manual-feedback">Válasz ellenőrzése</button><p class="feedback" id="manual-feedback" role="status"></p></fieldset>
+        <fieldset class="quiz-card" data-question="choice"><legend>2. Melyik film választása hagyja a legtöbb időt a további filmekre?</legend><label><input type="radio" name="choice" value="a"> Amelyik a leghamarabb kezdődik</label><label><input type="radio" name="choice" value="b"> Amelyik a leghamarabb véget ér</label><label><input type="radio" name="choice" value="c"> Amelyik a leghosszabb</label><button class="check-answer" type="button" data-answer="b" data-target="choice-feedback">Válasz ellenőrzése</button><p class="feedback" id="choice-feedback" role="status"></p></fieldset>
+        <button class="mark-done" type="button" data-complete="kezi">A kézi példát feldolgoztam</button>
+      </section>
+
+      <section class="lesson-section tracked" id="algoritmus" data-step="algoritmus">
+        <p class="step-kicker">04 · Az algoritmus felfedezése</p><h2>Mi alapján rendezzük sorba a filmeket?</h2>
+        <p>Elsőre adná magát, hogy a legkorábban kezdődő filmet válasszuk. De mi van akkor, ha ez a film szinte az egész napot elfoglalja? Közben több rövidebb vetítésről is lemaradhatunk.</p>
+        <h3>Próbáld ki kétféle rendezéssel!</h3>
+        <p>Az ellenpéldában az <code>1–10</code> film kezdődik a legkorábban, de ha ezt választjuk, utána már egyetlen másik film sem fér bele. A gombokkal rendezd át a filmeket, majd haladj végig rajtuk!</p>
+        <div class="simulator" aria-live="polite">
+          <div class="sort-actions"><button class="button secondary sort-choice" id="sort-start" type="button" aria-pressed="false">Rendezés kezdési idő szerint</button><button class="button secondary sort-choice" id="sort-end" type="button" aria-pressed="false">Rendezés befejezési idő szerint</button></div>
+          <div class="sim-header"><div><span>Vizsgált film</span><strong id="current-movie">–</strong></div><div><span>Kiválasztva</span><strong id="movie-count">0</strong></div></div>
+          <div class="movie-schedule" id="movie-schedule"></div>
+          <p id="sim-explanation">Válassz rendezési módot, majd kattints a „Következő film” gombra!</p>
+          <div class="sim-actions"><button class="button primary" id="sim-next" type="button">Következő film</button><button class="button secondary" id="sim-reset" type="button">Újrakezdés</button></div>
+        </div>
+        <div class="comparison-box"><div><strong>Kezdési idő szerint</strong><span>1 film</span><p>Az 1–10 filmet választjuk, ezért a többi már nem fér bele.</p></div><div><strong>Befejezési idő szerint</strong><span>3 film</span><p>A 2–3, 3–4 és 4–5 filmeket is meg tudjuk nézni.</p></div></div>
+
+        <div class="callout story">
+          <span aria-hidden="true">⚠</span>
+          <div>
+            <strong>Gyakori tévedés: Miért nem a legrövidebb filmet választjuk mindig?</strong>
+            <p>A legrövidebb film sem biztos, hogy jó választás. Lehet rövid, mégis rossz helyen kezdődik. Nézzük meg ezen a három filmen:</p>
+            <ul>
+              <li><strong>A film:</strong> <code>1–6</code> (hossza: 5)</li>
+              <li><strong>B film:</strong> <code>5–7</code> (hossza: 2 — ez a legrövidebb!)</li>
+              <li><strong>C film:</strong> <code>6–12</code> (hossza: 6)</li>
+            </ul>
+            <p>Ha a legrövidebb <code>5–7</code> vetítést választjuk, az mindkét másik filmmel átfedésben van, így <strong>összesen csak 1 filmet</strong> tudunk megnézni. Ha viszont az <code>1–6</code> és a <code>6–12</code> filmet választjuk, akkor <strong>összesen 2 film</strong> fér bele.</p>
+          </div>
+        </div>
+        <h3>Ami tényleg működik</h3>
+        <p>A filmeket a <strong>befejezési idejük szerint</strong> rendezzük. Mindig azt a még megnézhető filmet választjuk, amelyik a leghamarabb véget ér. Utána marad a legtöbb időnk a következő vetítésekre.</p>
+        <div class="algorithm-steps"><div><span>1</span><p>Rendezd a filmeket befejezési idő szerint növekvő sorrendbe.</p></div><div><span>2</span><p>Jegyezd meg, mikor ért véget az utoljára kiválasztott film.</p></div><div><span>3</span><p>Válaszd ki a következő filmet, ha a kezdése legalább ennyi.</p></div><div><span>4</span><p>Növeld a darabszámot, és jegyezd meg az új befejezési időt.</p></div></div>
+        <p class="learning-note"><strong>Miért mohó?</strong> Minden lépésben azt a filmet választjuk, amelyik a lehető leghamarabb felszabadítja az időnket. Nem próbáljuk végig az összes lehetséges filmkombinációt.</p>
+        <button class="mark-done" type="button" data-complete="algoritmus">Megértettem az algoritmust</button>
+      </section>
+
+      <section class="lesson-section tracked" id="programozas" data-step="programozas">
+        <p class="step-kicker">05 · Önálló programozás</p><h2>Rakjuk össze a programot!</h2><p>Nem kell rögtön az egész kódot megírni. Először készítsd el a filmek listáját, utána jöhet a rendezés, végül pedig a kiválasztás.</p>
+
+        <div class="program-flow" aria-label="Az adatok útja"><span>Bemenet</span><b>→</b><span>Filmek listája</span><b>→</b><span>Rendezés</span><b>→</b><span>Kiválasztás</span><b>→</b><span>Eredmény</span></div>
+
+        <div class="coding-group">
+          <div class="coding-group-title"><span>I.</span><div><strong>A bemenet feldolgozása</strong><p>A beolvasott időpontokból elkészítjük a filmek listáját.</p></div></div>
+        <div class="coding-step summary-step">
+          <span class="coding-step-number">1</span><div><h3>Készítsük el a filmek listáját!</h3><p>Az első sor megadja a filmek számát. Ezután minden sorból kiolvassuk a kezdési és befejezési időt, számmá alakítjuk őket, majd egy párként hozzáadjuk a listához.</p>
+          <div class="code-lines"><div>n = int(input())</div><div>filmek = []</div><br><div>for _ in range(<input class="code-blank" data-answer="n" data-label="A ciklus ismétlésszáma" data-explain="Pontosan n film adatait kell beolvasni, ezért a ciklus range(n) szerint fut.">):</div><div>&nbsp;&nbsp;&nbsp;&nbsp;adatok = input().<input class="code-blank" data-answer="split" data-label="A bemeneti sor felbontása" data-explain="A split() a szóköznél választja szét a kezdési és befejezési időt.">()</div><div>&nbsp;&nbsp;&nbsp;&nbsp;kezdes = <input class="code-blank" data-answer="int" data-label="A kezdés számmá alakítása" data-explain="Az input() szöveget ad vissza, ezért az int() alakítja egész számmá.">(adatok[0])</div><div>&nbsp;&nbsp;&nbsp;&nbsp;befejezes = <input class="code-blank" data-answer="int" data-label="A befejezés számmá alakítása" data-explain="A befejezési időt is int() segítségével alakítjuk számmá.">(adatok[1])</div><div>&nbsp;&nbsp;&nbsp;&nbsp;filmek.<input class="code-blank wide" data-answer="append" data-label="A filmpár hozzáadása" data-explain="Az append() hozzáadja a (kezdes, befejezes) párt a filmek listájához.">((kezdes, befejezes))</div></div>
+          <button class="code-check" type="button">A beolvasás ellenőrzése</button><p class="code-feedback" role="status"></p>
+          <div class="data-change"><span>Bemeneti sorok</span><code>3 5<br>4 9<br>5 8</code><b>→</b><span>Elkészült lista</span><code>[(3, 5), (4, 9), (5, 8)]</code></div></div>
+        </div>
+        </div>
+
+        <div class="coding-group">
+          <div class="coding-group-title"><span>II.</span><div><strong>Rendezés befejezési idő szerint</strong><p>Megadjuk a rendezés alapját, majd előkészítjük a számlálást.</p></div></div>
+        <div class="coding-step">
+          <span class="coding-step-number">2</span><div><h3>Készítsük el a rendezéshez szükséges segédfüggvényt!</h3><p>A segédfüggvény egy film befejezési idejét adja vissza. Ez alapján rendezzük majd a listát.</p>
+          <div class="code-lines"><div>def befejezesi_ido(film):</div><div>&nbsp;&nbsp;&nbsp;&nbsp;return film[<input class="code-blank" data-answer="1" data-label="A befejezési idő indexe" data-explain="A számozás 0-tól indul: film[0] a kezdés, film[1] a befejezés.">]</div></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+
+        <details class="teacher-note"><summary>Gyakori hiba: melyik indexen van a befejezési idő?</summary><p>A számozás 0-tól indul: a kezdési idő a <code>film[0]</code>, a befejezési idő pedig a <code>film[1]</code>.</p></details>
+
+        <div class="coding-step">
+          <span class="coding-step-number">3</span><div><h3>Kezdjük el a megoldó függvényt!</h3><p>A függvény először befejezési idő szerint rendezi a filmeket. Ezután létrehozzuk a számlálót, és eltároljuk az előző kiválasztott film befejezését.</p>
+          <div class="code-lines"><div>def legtobb_film(filmek):</div><div>&nbsp;&nbsp;&nbsp;&nbsp;<input class="code-blank code-line-full" data-answer="filmek.sort(key=befejezesi_ido)" data-label="A filmek rendezése" data-explain="A sort() rendezi a listát, a key=befejezesi_ido pedig megadja, hogy a befejezési idő legyen a rendezés alapja."></div><br><div>&nbsp;&nbsp;&nbsp;&nbsp;megnezett_filmek = <input class="code-blank" data-answer="0" data-label="A számláló kezdőértéke" data-explain="Kezdetben még egyetlen filmet sem választottunk ki, ezért a számláló értéke 0."></div><div>&nbsp;&nbsp;&nbsp;&nbsp;elozo_befejezes = <input class="code-blank" data-answer="0" data-label="Az előző befejezés kezdőértéke" data-explain="A kezdőérték 0, így az első pozitív kezdési idejű film kiválasztható."></div></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+        </div>
+
+        <div class="coding-group">
+          <div class="coding-group-title"><span>III.</span><div><strong>Kiválasztás és eredmény</strong><p>Végigmegyünk a rendezett listán, kiválasztjuk a beleférő filmeket, majd kiírjuk a darabszámot.</p></div></div>
+        <div class="coding-step">
+          <span class="coding-step-number">4</span><div><h3>Menjünk végig a filmeken!</h3><p>A rendezett listából sorban kivesszük az aktuális film kezdési és befejezési idejét.</p>
+          <div class="code-lines"><div>&nbsp;&nbsp;&nbsp;&nbsp;for film in filmek:</div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kezdes = film[<input class="code-blank" data-answer="0" data-label="A kezdési idő indexe" data-explain="A pár első eleme, vagyis a 0. indexű érték a kezdési idő.">]</div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;befejezes = film[<input class="code-blank" data-answer="1" data-label="A befejezési idő indexe" data-explain="A pár második eleme, vagyis az 1. indexű érték a befejezési idő.">]</div></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+
+        <div class="coding-step">
+          <span class="coding-step-number">5</span><div><h3>Döntsük el, hogy a film belefér-e!</h3><p>A filmet akkor tudjuk megnézni, ha nem kezdődik korábban, mint ahogy az előző kiválasztott film véget ért.</p>
+          <div class="code-lines"><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if kezdes <input class="code-blank" data-answer=">=" data-label="A kiválasztás feltétele" data-explain="A >= azért kell, mert a következő film pontosan az előző befejezésekor is kezdődhet."> elozo_befejezes:</div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="code-blank code-long" data-answer="megnezett_filmek += 1" data-label="A számláló növelése" data-explain="Ha a film belefér, a megnézett filmek számát eggyel növeljük."></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="code-blank code-long" data-answer="elozo_befejezes = befejezes" data-label="Az új befejezési idő tárolása" data-explain="A következő vizsgálathoz eltároljuk az imént kiválasztott film befejezését."></div></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+
+        <details class="teacher-note"><summary>Gyakori hiba a feltételben</summary><p>Ha az egyik film 5-kor véget ér, a másik pedig 5-kor kezdődik, akkor a két vetítés nem fedi egymást. Ezért az egyenlőség is megengedett, vagyis <code>&gt;=</code> jelet használunk.</p></details>
+
+        <div class="coding-step">
+          <span class="coding-step-number">6</span><div><h3>Adjuk vissza az eredményt!</h3><p>A ciklus után a függvény visszaadja, hány filmet sikerült kiválasztani.</p>
+          <div class="inline-code">&nbsp;&nbsp;&nbsp;&nbsp;return <input class="code-blank code-long" data-answer="megnezett_filmek" data-label="A visszaadott eredmény" data-explain="A megnezett_filmek változóban számoltuk meg a kiválasztott filmeket."></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+
+        <div class="coding-step">
+          <span class="coding-step-number">7</span><div><h3>Hívjuk meg a függvényt!</h3><p>A beolvasás után átadjuk a filmek listáját a megoldó függvénynek, majd kiírjuk a kapott eredményt.</p>
+          <div class="code-lines"><div>eredmeny = <input class="code-blank code-long" data-answer="legtobb_film(filmek)" data-label="A függvény meghívása" data-explain="A legtobb_film() függvénynek a filmek listáját adjuk át."></div><div>print(<input class="code-blank wide" data-answer="eredmeny" data-label="A kiírt érték" data-explain="A függvény visszatérési értékét az eredmeny változó tárolja, ezt kell kiírni.">)</div></div>
+          <button class="code-check" type="button">Ellenőrzés</button><p class="code-feedback" role="status"></p></div>
+        </div>
+        </div>
+
+        <div class="learning-note program-order-note"><strong>Miért más a sorrend a kész programban?</strong> A megoldás átgondolásakor először azt követtük végig, hogyan lesz a bemenetből eredmény. A kész Python-programban viszont előbb leírjuk a két függvényt, és csak utánuk olvassuk be az adatokat. Így a függvények már léteznek, amikor meghívjuk őket.</div>
+
+        <h3 class="final-program-title">Próbáld ki a programodat!</h3><p>Az alábbi kezdőkódból még hiányzik a film kiválasztásának feltétele és a hozzá tartozó két értékadás. Egészítsd ki a korábbi lépések alapján, majd futtasd saját bemenettel!</p>
+        <div class="python-lab"><div class="lab-heading"><div><span class="lab-badge">Interaktív Python-labor</span><h3>Egészítsd ki, majd futtasd a programot!</h3></div><span class="runtime-status" id="runtime-status">Python még nincs betöltve</span></div>
+          <label class="lab-input-label" for="program-input">Bemenet</label><textarea id="program-input" class="program-input" spellcheck="false">3
+3 5
+4 9
+5 8</textarea>
+          <label class="sr-only" for="python-editor">Python-program szerkesztése</label><textarea id="python-editor" class="python-editor" spellcheck="false">def befejezesi_ido(film):
+    return film[1]
+
+
+def legtobb_film(filmek):
+    # 1. Rendezd a filmeket befejezési idő szerint!
+    filmek.sort(key=befejezesi_ido)
+
+    megnezett_filmek = 0
+    elozo_befejezes = 0
+
+    # 2. Járd be a rendezett listát!
+    for film in filmek:
+        kezdes = film[0]
+        befejezes = film[1]
+
+        # 3. Egészítsd ki a kiválasztás feltételét és utasításait!
+        # if ...:
+        #     ...
+        #     ...
+        pass
+
+    return megnezett_filmek
+
+
+n = int(input())
+filmek = []
+
+for _ in range(n):
+    adatok = input().split()
+    kezdes = int(adatok[0])
+    befejezes = int(adatok[1])
+    filmek.append((kezdes, befejezes))
+
+eredmeny = legtobb_film(filmek)
+
+print(eredmeny)</textarea>
+          <div class="lab-actions"><button class="button primary" id="run-python" type="button">▶ Kód futtatása</button><button class="button test-button" id="run-tests" type="button">✓ Automatikus tesztek</button><button class="button secondary" id="reset-code" type="button">Kezdőkód visszaállítása</button><button class="button secondary" id="load-solution" type="button">Teljes megoldás betöltése</button><button class="button secondary copy-code" type="button" data-copy="python-editor">Kód másolása</button></div>
+          <p class="lab-note">A fenti bemenetet ugyanúgy kapja meg a program, mintha a sorokat a billentyűzetről írnánk be. Az első futtatás néhány másodpercig tarthat.</p><div class="console-wrap"><div class="console-title"><span>Konzol kimenete</span><button id="clear-console" type="button">Törlés</button></div><pre id="python-output" class="python-output" aria-live="polite">A program kimenete itt jelenik meg.</pre></div>
+        </div>
+        <div class="test-cases"><h3>Ezekkel teszteld a programodat</h3><p>Az adatokat ebben a formában másold a futtatható felület <strong>Bemenet</strong> mezőjébe!</p><div class="test-case"><pre><code id="movie-test-1">3
+3 5
+4 9
+5 8</code></pre><span><button class="copy-code test-copy" type="button" data-copy="movie-test-1">Bemenet másolása</button><strong>Várt eredmény: 2</strong></span></div><div class="test-case"><pre><code id="movie-test-2">4
+1 3
+2 5
+4 7
+7 8</code></pre><span><button class="copy-code test-copy" type="button" data-copy="movie-test-2">Bemenet másolása</button><strong>Várt eredmény: 3</strong></span></div><div class="test-case"><pre><code id="movie-test-3">4
+1 10
+2 3
+3 4
+4 5</code></pre><span><button class="copy-code test-copy" type="button" data-copy="movie-test-3">Bemenet másolása</button><strong>Várt eredmény: 3</strong></span></div></div>
+        <details class="solution-box"><summary>A program részletes magyarázata</summary><div class="solution-content"><div class="code-block"><div class="code-toolbar"><span>megoldas.py</span><button class="copy-code" type="button" data-copy="solution-code">Kód másolása</button></div><pre id="solution-code"><code>def befejezesi_ido(film):
+    return film[1]
+
+
+def legtobb_film(filmek):
+    filmek.sort(key=befejezesi_ido)
+
+    megnezett_filmek = 0
+    elozo_befejezes = 0
+
+    for film in filmek:
+        kezdes = film[0]
+        befejezes = film[1]
+
+        if kezdes &gt;= elozo_befejezes:
+            megnezett_filmek += 1
+            elozo_befejezes = befejezes
+
+    return megnezett_filmek
+
+
+n = int(input())
+filmek = []
+
+for _ in range(n):
+    adatok = input().split()
+    kezdes = int(adatok[0])
+    befejezes = int(adatok[1])
+    filmek.append((kezdes, befejezes))
+
+eredmeny = legtobb_film(filmek)
+
+print(eredmeny)</code></pre></div><h3>Mi történik a programban?</h3><p>A <code>befejezesi_ido()</code> a film második adatát, vagyis a befejezési időt adja vissza. A rendezés ebből tudja, melyik értéket kell figyelnie.</p><p>Ezután sorban megnézzük a filmeket. Amelyik az előző befejezése után kezdődik, azt kiválasztjuk, növeljük a számlálót, és megjegyezzük, mikor ér véget.</p><p>A fájl alsó részén történik a beolvasás. A két időpontból párokat készítünk, meghívjuk a függvényt, végül kiírjuk a kapott darabszámot.</p></div></details>
+
+        <details class="solution-box"><summary>💡 Rövidebben is lehet: rendezés lambda-függvénnyel</summary><div class="solution-content"><p>Ha már ismered a lambda-függvényt, a külön segédfüggvény elhagyható:</p><pre><code>filmek.sort(key=lambda film: film[1])</code></pre><p>A jelentése ugyanaz: rendezéskor minden filmpár második adatát, vagyis a befejezési időt nézzük.</p></div></details>
+
+        <details class="solution-box"><summary>⚡ Versenyzői tipp: miért kaphat a kód időtúllépést (TLE) a CSES oldalán?</summary><div class="solution-content"><p>A CSES feladatban akár <strong>200 000 film</strong> adatait is be kell olvasni. A beépített <code>input()</code> ilyen nagy bemenetnél lassú lehet, ezért a program időtúllépést kaphat.</p><p>Ha a kódot közvetlenül a CSES felületén futtatod, a fájl elejére ezt a két sort teheted:</p><pre><code>import sys
+input = sys.stdin.readline</code></pre><p>Ez az <code>input()</code> hívást gyorsabb sorolvasóra cseréli. A program többi részén nem kell változtatni.</p></div></details>
+        <button class="mark-done" type="button" data-complete="programozas">Elkészítettem vagy átnéztem a programot</button>
+      </section>
+
+      <section class="lesson-section tracked" id="futasido" data-step="futasido">
+        <p class="step-kicker">06 · Futási idő</p>
+        <h2>Hol végzi a program a legtöbb munkát?</h2>
+        <div class="runtime-explanation">
+          <h3>Mit jelent a futási idő?</h3>
+          <p>Most sem a másodperceket számoljuk. A kérdés az, hogyan nő a munka, ha egyre több film kerül a bemenetbe.</p>
+          <p>Az <code>n</code> a filmek számát jelenti.</p>
+        </div>
+        <h3>Kövessük végig, ahogy lefut!</h3>
+        <div class="algorithm-steps runtime-steps">
+          <div><span>1</span><p><strong>A filmek számának beolvasása és az üres lista létrehozása – O(1)</strong><br>Az <code>n</code> értékét egyszer olvassuk be, az üres <code>filmek</code> listát pedig egyszer hozzuk létre. Ez nem függ a filmek számától.</p></div>
+          <div><span>2</span><p><strong>A filmek adatainak beolvasása – O(n)</strong><br>A beolvasó ciklus <code>n</code>-szer fut le. Minden film kezdési és befejezési idejét egyszer alakítjuk számmá és egyszer tesszük a listába.</p></div>
+          <div><span>3</span><p><strong>A filmek rendezése – O(n log n)</strong><br>Itt történik a legtöbb munka. A <code>sort()</code> befejezési idő szerint rakja sorba a filmeket, ennek futási ideje <code>O(n log n)</code>.</p></div>
+          <div><span>4</span><p><strong>A két kezdőérték – O(1)</strong><br>Ezeket csak egyszer állítjuk be. Több filmnél sem lesz itt több dolgunk.</p></div>
+          <div><span>5</span><p><strong>A rendezett filmek végigjárása – O(n)</strong><br>A második <code>for</code> ciklus minden filmet pontosan egyszer vizsgál meg.</p></div>
+          <div><span>6</span><p><strong>Mi történik egy filmnél? – O(1)</strong><br>Kiolvassuk a két időpontot, összehasonlítjuk őket, és ha a film belefér, módosítjuk a két változót. Ez egy filmnél állandó munka.</p></div>
+          <div><span>7</span><p><strong>Az eredmény visszaadása és kiírása – O(1)</strong><br>A függvény egyszer adja vissza, a program pedig egyszer írja ki az eredményt.</p></div>
+        </div>
+        <div class="runtime-conclusion">
+          <span>Végeredmény</span><strong>O(n log n)</strong>
+          <p>Egy film ellenőrzése önmagában állandó munka. Mivel ezt minden filmnél elvégezzük, a teljes bejárás <code>O(n)</code>. Ennél többe kerül a rendezés, ezért végül a teljes program futási ideje <strong>O(n log n)</strong>.</p>
+        </div>
+        <button class="mark-done" type="button" data-complete="futasido">Megértettem a futási időt</button>
+      </section>
+
+      <section class="lesson-section tracked" id="ellenorzes" data-step="ellenorzes"><p class="step-kicker">07 · Önellenőrzés</p><h2>Ellenőrizd, mit tanultál!</h2><div class="final-quiz">
+        <fieldset data-question="q1"><legend>1. Mi szerint rendezzük a filmeket?</legend><label><input type="radio" name="q1" value="a"> Kezdési idő szerint</label><label><input type="radio" name="q1" value="b"> Befejezési idő szerint</label><label><input type="radio" name="q1" value="c"> Hossz szerint</label><button class="check-answer" type="button" data-answer="b" data-target="q1-feedback">Válasz ellenőrzése</button><p class="feedback" id="q1-feedback"></p></fieldset>
+        <fieldset data-question="q2"><legend>2. Mikor választható ki a következő film?</legend><label><input type="radio" name="q2" value="a"> Ha a kezdése legalább az előző befejezése</label><label><input type="radio" name="q2" value="b"> Ha hosszabb az előzőnél</label><label><input type="radio" name="q2" value="c"> Ha korábban kezdődik</label><button class="check-answer" type="button" data-answer="a" data-target="q2-feedback">Válasz ellenőrzése</button><p class="feedback" id="q2-feedback"></p></fieldset>
+        <fieldset data-question="q3"><legend>3. Miért hibás stratégia mindig a legrövidebb filmet választani?</legend><label><input type="radio" name="q3" value="a"> Mert egyetlen rövid film több másik vetítést is kizárhat az átfedés miatt</label><label><input type="radio" name="q3" value="b"> Mert a Python nem képes a hosszúság alapján rendezni az adatokat</label><label><input type="radio" name="q3" value="c"> Mert mindig a leghosszabb vetítést kell keresnünk</label><button class="check-answer" type="button" data-answer="a" data-target="q3-feedback">Válasz ellenőrzése</button><p class="feedback" id="q3-feedback"></p></fieldset>
+        <fieldset data-question="q4"><legend>4. Mennyi a teljes algoritmus futási ideje?</legend><label><input type="radio" name="q4" value="a"> O(1)</label><label><input type="radio" name="q4" value="b"> O(n)</label><label><input type="radio" name="q4" value="c"> O(n log n)</label><button class="check-answer" type="button" data-answer="c" data-target="q4-feedback">Válasz ellenőrzése</button><p class="feedback" id="q4-feedback"></p></fieldset>
+      </div><button class="mark-done" type="button" data-complete="ellenorzes">Befejeztem az önellenőrzést</button></section>
+
+      <section class="lesson-section tracked transfer" id="tovabblepes" data-step="tovabblepes"><p class="step-kicker">08 · Továbbgondolás</p><h2>Ne csak a darabszámot add vissza!</h2><p>Módosítsd a függvényt úgy, hogy a kiválasztott filmek időpontjait is adja vissza!</p><div class="challenge"><span>Példa</span><code>[(3, 5), (4, 9), (5, 8)]</code><strong>→ [(3, 5), (5, 8)]</strong></div><details><summary>Megoldási ötlet</summary><p>Készíts egy üres listát, és minden kiválasztott filmnél használd az <code>append((kezdes, befejezes))</code> utasítást.</p></details><button class="mark-done" type="button" data-complete="tovabblepes">Befejeztem a feladatot</button><div class="completion-message" id="completion-message" hidden><strong>Kész vagy!</strong><p>Végigértél a Filmfesztivál feladaton.</p><a class="button primary" href="index.html">Vissza a feladatokhoz</a></div></section>
+    </article>
+  </main>
+  <footer><p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p></footer>
+  <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script><script src="movie.js"></script>
+</body>
+</html>

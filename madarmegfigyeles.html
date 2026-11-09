@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Madármegfigyelés – önállóan feldolgozható Python algoritmizálási feladat 7–8. évfolyam számára.">
+  <title>Madármegfigyelés | Algoritmus Tanulóműhely</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="lesson-page">
+  <a class="skip-link" href="#lecke">Ugrás a leckéhez</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>Algoritmus Tanulóműhely</span></a>
+    <nav aria-label="Fő navigáció"><a href="index.html">Kezdőlap</a><a class="active" href="madarmegfigyeles.html">1. feladat</a><a href="filmfesztival.html">2. feladat</a><a href="varosok-es-jaratok.html">3. feladat</a><a href="osszegzes.html">Összegzés</a></nav>
+  </header>
+
+  <div class="progress-shell" aria-label="Tanulási előrehaladás">
+    <div class="progress-meta"><span>1. modul · Madármegfigyelés</span><strong id="progress-label">0% kész</strong></div>
+    <div class="progress-track"><div id="progress-bar"></div></div>
+  </div>
+
+  <main id="lecke" class="lesson-layout">
+    <aside class="lesson-nav" aria-label="A lecke részei">
+      <p class="eyebrow">Tartalom</p>
+      <a href="#celok">1. Tanulási cél</a>
+      <a href="#problema">2. A probléma</a>
+      <a href="#kezi">3. Kézi feldolgozás</a>
+      <a href="#algoritmus">4. Az algoritmus</a>
+      <a href="#programozas">5. Programozás</a>
+      <a href="#futasido">6. Futási idő</a>
+      <a href="#ellenorzes">7. Önellenőrzés</a>
+      <a href="#tovabblepes">8. Továbbgondolás</a>
+      <button class="reset-progress" id="reset-progress" type="button">Haladás törlése</button>
+    </aside>
+
+    <article class="lesson-content">
+      <section class="lesson-hero tracked" id="celok" data-step="celok">
+        <div>
+          <p class="eyebrow">1. feladat · 7–8. évfolyam</p>
+          <h1>Madármegfigyelés</h1>
+          <p class="lead">Keressük meg egy listában azt az értéket, amelyik a legtöbbször szerepel!</p>
+          <div class="lesson-meta"><span>◷ 20–25 perc</span><span>● Könnyű</span><span>⌁ Python</span></div>
+        </div>
+        <div class="goal-box">
+          <h2>Mit gyakorlunk ebben a feladatban?</h2>
+          <ul class="check-list">
+            <li>megszámolni egy lista elemeinek előfordulását;</li>
+            <li>megkeresni a leggyakoribb elemet;</li>
+            <li>eldönteni, mi történjen holtversenynél;</li>
+            <li>elmondani, hogyan működik a program.</li>
+          </ul>
+        </div>
+        <button class="mark-done" type="button" data-complete="celok">Elolvastam, kezdhetjük</button>
+      </section>
+
+      <section class="lesson-section tracked" id="problema" data-step="problema">
+        <p class="step-kicker">02 · A probléma megértése</p>
+        <h2>Melyik madárfajt látták a legtöbbször?</h2>
+        <p>Egy természetvédelmi területen öt madárfajt figyelnek meg. A fajokat 1-től 5-ig számozzák, és minden észlelésnél feljegyzik a látott madár fajának számát.</p>
+        <div class="callout story"><span aria-hidden="true">☀</span><div><strong>A feladat</strong><p>Keresd meg, melyik madárfajt látták a legtöbbször! Ha két vagy több faj ugyanannyiszor szerepel, a kisebb azonosítót válaszd.</p></div></div>
+        <h3>Bemenet formátuma</h3>
+        <p>Az első sorban az <code>n</code> szám áll, ez mutatja meg a megfigyelések számát. A második sorban <code>n</code> darab, szóközzel elválasztott fajazonosító következik.</p>
+        <div class="io-grid">
+          <div class="io-card"><span>Példabemenet</span><strong>6</strong><code>1 4 4 4 5 3</code><p><code>n = 6</code>, ezért a második sor pontosan hat fajazonosítót tartalmaz.</p></div>
+          <div class="io-card output"><span>Kimenet</span><strong>4</strong><p>A 4-es fajt figyelték meg a legtöbbször.</p></div>
+        </div>
+        <p class="learning-note"><strong>Fontos:</strong> a bemenetben a fajazonosítókat szóközökkel elválasztva kapjuk meg, például: <code>1 4 4 4 5 3</code>. A HackerRank keretprogramja ebből automatikusan elkészíti a <code>[1, 4, 4, 4, 5, 3]</code> Python-listát, majd átadja a függvénynek. Ezért a függvényen belül nem kell sem <code>input()</code>-ot használni, sem a számokat külön listává alakítani. A HackerRank oldalán a függvény neve <code>migratoryBirds(arr)</code>, mi pedig magyar nevekkel dolgozunk: <code>leggyakoribb_madar(madarak)</code>.</p>
+        <div class="source-box"><strong>Eredeti feladat:</strong> <a href="https://www.hackerrank.com/challenges/migratory-birds/problem" target="_blank" rel="noopener">HackerRank – Migratory Birds ↗</a></div>
+        <button class="mark-done" type="button" data-complete="problema">Értem a feladatot</button>
+      </section>
+
+      <section class="lesson-section tracked" id="kezi" data-step="kezi">
+        <p class="step-kicker">03 · Dolgozd fel kézzel!</p>
+        <h2>Előbb gondolkodjunk program nélkül</h2>
+        <p>Most még ne a kódot nézd! Először próbáld meg a számsorból kitalálni a választ.</p>
+        <div class="data-strip" aria-label="Madárfaj azonosítók"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
+
+        <fieldset class="quiz-card" data-question="manual">
+          <legend>1. Melyik faj fordul elő a legtöbbször?</legend>
+          <label><input type="radio" name="manual" value="1"> Az 1-es faj</label>
+          <label><input type="radio" name="manual" value="3"> A 3-as faj</label>
+          <label><input type="radio" name="manual" value="4"> A 4-es faj</label>
+          <label><input type="radio" name="manual" value="5"> Az 5-ös faj</label>
+          <button class="check-answer" type="button" data-answer="4" data-target="manual-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="manual-feedback" role="status"></p>
+        </fieldset>
+
+        <fieldset class="quiz-card" data-question="tie">
+          <legend>2. Ha a lista <code>1 1 2 2 3</code>, mi az eredmény?</legend>
+          <label><input type="radio" name="tie" value="1"> 1, mert holtversenynél a kisebb azonosító nyer</label>
+          <label><input type="radio" name="tie" value="2"> 2, mert később találjuk meg</label>
+          <label><input type="radio" name="tie" value="3"> 3, mert ez a legnagyobb azonosító</label>
+          <button class="check-answer" type="button" data-answer="1" data-target="tie-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="tie-feedback" role="status"></p>
+        </fieldset>
+        <button class="mark-done" type="button" data-complete="kezi">A kézi példát feldolgoztam</button>
+      </section>
+
+      <section class="lesson-section tracked" id="algoritmus" data-step="algoritmus">
+        <p class="step-kicker">04 · Az algoritmus felfedezése</p>
+        <h2>Számláljuk meg az előfordulásokat!</h2>
+        <p>A fajokat 1-től 5-ig számozzuk, ezért készítünk egy hat elemű számlálólistát. A nulladik hely üresen marad. Így nem kell számolgatni az indexeket: a 4-es fajhoz rögtön a lista 4. eleme tartozik.</p>
+        <h3>A feldolgozandó megfigyelések</h3>
+        <p>A program balról jobbra halad, és egyszerre mindig egy számot dolgoz fel:</p>
+        <div class="data-strip observation-strip" id="observation-strip" aria-label="Az eredeti madármegfigyelések sorozata"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
+        <div class="simulator" aria-live="polite">
+          <div class="sim-header"><div><span>Aktuális megfigyelés</span><strong id="current-bird">–</strong></div><div><span>Feldolgozva</span><strong><b id="sim-step">0</b> / 6</strong></div></div>
+          <div class="counter-grid" id="counter-grid">
+            <div><span>Faj</span><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b></div>
+            <div><span>Darab</span><b id="count-1">0</b><b id="count-2">0</b><b id="count-3">0</b><b id="count-4">0</b><b id="count-5">0</b></div>
+          </div>
+          <p id="sim-explanation">Kattints a „Következő megfigyelés” gombra!</p>
+          <div class="sim-actions"><button class="button primary" id="sim-next" type="button">Következő megfigyelés</button><button class="button secondary" id="sim-reset" type="button">Újrakezdés</button></div>
+        </div>
+        <div class="algorithm-steps">
+          <div><span>1</span><p>Hozz létre egy nullákkal feltöltött számlálólistát.</p></div>
+          <div><span>2</span><p>Haladj végig a megfigyelések listáján.</p></div>
+          <div><span>3</span><p>Növeld a látott fajhoz tartozó számlálót.</p></div>
+          <div><span>4</span><p>Keresd meg a legtöbbször előforduló fajt. Holtversenynél maradjon a kisebb azonosító.</p></div>
+        </div>
+        <div class="teacher-notes">
+          <details class="teacher-note"><summary>Gyakori hiba: miért nem használjuk a nulladik elemet?</summary><p>A fajok számozása 1-től indul. Ha a nulladik helyet üresen hagyjuk, a faj azonosítója közvetlenül lehet a lista indexe.</p></details>
+          <details class="teacher-note"><summary>Gyakori hiba: <code>&gt;</code> vagy <code>&gt;=</code>?</summary><p>A leggyakoribb faj keresésénél <code>&gt;</code> jelet használunk. Ha <code>&gt;=</code> lenne, holtversenynél a nagyobb azonosító írná felül a kisebbet.</p></details>
+        </div>
+        <button class="mark-done" type="button" data-complete="algoritmus">Megértettem az algoritmust</button>
+      </section>
+
+      <section class="lesson-section tracked" id="programozas" data-step="programozas">
+        <p class="step-kicker">05 · Önálló programozás</p>
+        <h2>Egészítsd ki a programot!</h2>
+        <p>A kezdőkódból két rész hiányzik. Próbáld meg először önállóan kiegészíteni, majd futtasd le itt az oldalon!</p>
+        <div class="python-lab" id="python-lab">
+          <div class="lab-heading">
+            <div><span class="lab-badge">Interaktív Python-labor</span><h3>Írd meg és futtasd a megoldást!</h3></div>
+            <span class="runtime-status" id="runtime-status">Python még nincs betöltve</span>
+          </div>
+          <label class="sr-only" for="python-editor">Python-program szerkesztése</label>
+          <textarea id="python-editor" class="python-editor" spellcheck="false" aria-describedby="lab-note">def leggyakoribb_madar(madarak):
+    gyakorisag = [0, 0, 0, 0, 0, 0]
+
+    # 1. Számold meg az egyes fajokat!
+
+
+    # 2. Keresd meg a leggyakoribb fajt!
+
+
+    return eredmeny
+
+
+madarak = [1, 4, 4, 4, 5, 3]
+print(leggyakoribb_madar(madarak))</textarea>
+          <div class="lab-actions">
+            <button class="button primary" id="run-python" type="button">▶ Kód futtatása</button>
+            <button class="button test-button" id="run-tests" type="button">✓ Automatikus tesztek</button>
+            <button class="button secondary" id="reset-code" type="button">Kezdőkód visszaállítása</button>
+            <button class="button secondary" id="load-solution" type="button">Megoldás betöltése</button>
+            <button class="button secondary copy-code" type="button" data-copy="python-editor">Kód másolása</button>
+          </div>
+          <p class="lab-note" id="lab-note">Az első futtatás néhány másodpercig tarthat, mert a böngésző ekkor tölti be a Python-környezetet. <code>input()</code>-ra itt nincs szükség.</p>
+          <div class="console-wrap">
+            <div class="console-title"><span>Konzol kimenete</span><button id="clear-console" type="button">Törlés</button></div>
+            <pre id="python-output" class="python-output" aria-live="polite">A program kimenete itt jelenik meg.</pre>
+          </div>
+        </div>
+        <div class="test-cases"><h3>Ezekkel teszteld a programodat</h3><div><code>[1, 4, 4, 4, 5, 3]</code><strong>→ 4</strong></div><div><code>[1, 1, 2, 2, 3]</code><strong>→ 1</strong></div><div><code>[5, 5, 5, 2, 2]</code><strong>→ 5</strong></div></div>
+
+        <div class="hint-stack">
+          <h3>Elakadtál? Először csak az első segítséget nyisd meg!</h3>
+          <details><summary><span>1. segítség</span> Merre indulj?</summary><p>Haladj végig a <code>madarak</code> listán! Az aktuális faj száma megmutatja, a <code>gyakorisag</code> lista melyik elemét kell növelned.</p></details>
+          <details><summary><span>2. segítség</span> Algoritmikus segítség</summary><pre><code>minden madár esetén:
+    gyakoriság[madár] növelése eggyel
+
+eredmény kezdetben 1
+2-től 5-ig minden faj esetén:
+    ha szigorúan gyakoribb az eddigi eredménynél:
+        eredmény legyen ez a faj</code></pre></details>
+          <details><summary><span>3. segítség</span> Kódrészlet</summary><pre><code>for madar in madarak:
+    gyakorisag[madar] += 1
+
+eredmeny = 1
+for faj in range(2, 6):
+    if gyakorisag[faj] &gt; gyakorisag[eredmeny]:
+        eredmeny = faj</code></pre></details>
+        </div>
+
+        <details class="solution-box">
+          <summary>Teljes megoldás és magyarázat megtekintése</summary>
+          <div class="solution-content">
+            <div class="code-block">
+              <div class="code-toolbar"><span>megoldas.py</span><button class="copy-code" type="button" data-copy="solution-code">Kód másolása</button></div>
+              <pre id="solution-code"><code>def leggyakoribb_madar(madarak):
+    gyakorisag = [0, 0, 0, 0, 0, 0]
+
+    for madar in madarak:
+        gyakorisag[madar] += 1
+
+    eredmeny = 1
+    for faj in range(2, 6):
+        if gyakorisag[faj] &gt; gyakorisag[eredmeny]:
+            eredmeny = faj
+
+    return eredmeny
+
+
+madarak = [1, 4, 4, 4, 5, 3]
+print(leggyakoribb_madar(madarak))</code></pre>
+            </div>
+            <h3>Miért működik?</h3>
+            <p>Az első ciklus elkészíti a számlálást. Utána a 2-estől az 5-ösig megnézzük, találtunk-e az eddiginél gyakoribb fajt. Az <code>eredmeny</code> csak valóban nagyobb értéknél változik. Ha két faj gyakorisága egyforma, a korábbi, vagyis a kisebb azonosító marad.</p>
+          </div>
+        </details>
+        <button class="mark-done" type="button" data-complete="programozas">Elkészítettem vagy átnéztem a programot</button>
+      </section>
+
+      <section class="lesson-section tracked" id="futasido" data-step="futasido">
+        <p class="step-kicker">06 · Futási idő</p>
+        <h2>Mennyi munkát végez a program?</h2>
+        <div class="runtime-explanation">
+          <h3>Mit jelent egy algoritmus futási ideje?</h3>
+          <p>Itt nem stopperrel mérünk. Azt figyeljük, mennyivel lesz több dolga a programnak, ha hosszabb megfigyelési listát kap.</p>
+          <p>Az <code>n</code> most a megfigyelések számát jelenti.</p>
+        </div>
+
+        <h3>Nézzük sorban, mi történik!</h3>
+        <div class="algorithm-steps runtime-steps">
+          <div><span>1</span><p><strong>A gyakoriságlista létrehozása – O(1)</strong><br>Ez a lista mindig hat elemű. Akkor sem lesz nagyobb, ha ezer megfigyelést kapunk.</p></div>
+          <div><span>2</span><p><strong>A megfigyelések bejárása – O(n)</strong><br>Az első <code>for</code> ciklus a <code>madarak</code> lista mind az <code>n</code> elemét pontosan egyszer vizsgálja meg.</p></div>
+          <div><span>3</span><p><strong>Mit csinálunk egy madárnál? – O(1)</strong><br>Megkeressük a hozzá tartozó számlálót, és növeljük eggyel. Ez önmagában állandó munka, viszont minden madárnál elvégezzük.</p></div>
+          <div><span>4</span><p><strong>A kezdő eredmény beállítása – O(1)</strong><br>Az <code>eredmeny = 1</code> egyetlen értékadás. Több megfigyelésnél sem kell többször végrehajtani.</p></div>
+          <div><span>5</span><p><strong>A fajok összehasonlítása – O(1)</strong><br>Csak négy fajt ellenőrzünk: a 2-est, 3-ast, 4-est és 5-öst. Ez a ciklus mindig négyszer fut le.</p></div>
+          <div><span>6</span><p><strong>Az eredmény visszaadása és kiírása – O(1)</strong><br>A függvény egyszer adja vissza, a program pedig egyszer írja ki az eredményt.</p></div>
+        </div>
+        <div class="runtime-conclusion">
+          <span>Végeredmény</span><strong>O(n)</strong>
+          <p>A legtöbb munka a megfigyelések végigjárása. Minden más rész csak néhány állandó lépés. Emiatt a teljes futási idő <strong>O(n)</strong>: kétszer hosszabb listánál nagyjából kétszer annyi elemet dolgozunk fel.</p>
+        </div>
+        <button class="mark-done" type="button" data-complete="futasido">Megértettem a futási időt</button>
+      </section>
+
+      <section class="lesson-section tracked" id="ellenorzes" data-step="ellenorzes">
+        <p class="step-kicker">07 · Önellenőrzés</p>
+        <h2>Ellenőrizd, mit tanultál!</h2>
+        <div id="final-quiz" class="final-quiz">
+          <fieldset data-final-question="q1"><legend>1. Mit tárol a <code>gyakorisag[4]</code>?</legend><label><input type="radio" name="q1" value="a"> A 4. megfigyelést</label><label><input type="radio" name="q1" value="b"> A 4-es faj megfigyeléseinek számát</label><label><input type="radio" name="q1" value="c"> A legnagyobb azonosítót</label><button class="check-answer check-final-answer" type="button" data-answer="b" data-target="q1-feedback">Válasz ellenőrzése</button><p class="feedback" id="q1-feedback" role="status"></p></fieldset>
+          <fieldset data-final-question="q2"><legend>2. Miért hat elemű a számlálólista?</legend><label><input type="radio" name="q2" value="a"> Mert hat megfigyelés van</label><label><input type="radio" name="q2" value="b"> Hogy az 1–5 azonosító közvetlenül index legyen, a 0. elemet pedig ne használjuk</label><label><input type="radio" name="q2" value="c"> A Python-listák mindig hat eleműek</label><button class="check-answer check-final-answer" type="button" data-answer="b" data-target="q2-feedback">Válasz ellenőrzése</button><p class="feedback" id="q2-feedback" role="status"></p></fieldset>
+          <fieldset data-final-question="q3"><legend>3. Miért <code>&gt;</code> és nem <code>&gt;=</code> szerepel a maximumkeresésben?</legend><label><input type="radio" name="q3" value="a"> Így holtversenynél megmarad a kisebb azonosító</label><label><input type="radio" name="q3" value="b"> Mert a Pythonban nincs <code>&gt;=</code></label><label><input type="radio" name="q3" value="c"> Így gyorsabb a program</label><button class="check-answer check-final-answer" type="button" data-answer="a" data-target="q3-feedback">Válasz ellenőrzése</button><p class="feedback" id="q3-feedback" role="status"></p></fieldset>
+          <fieldset data-final-question="q4"><legend>4. Mennyi a futási idő <code>n</code> megfigyelésnél?</legend><label><input type="radio" name="q4" value="a"> O(1)</label><label><input type="radio" name="q4" value="b"> O(log n)</label><label><input type="radio" name="q4" value="c"> O(n)</label><button class="check-answer check-final-answer" type="button" data-answer="c" data-target="q4-feedback">Válasz ellenőrzése</button><p class="feedback" id="q4-feedback" role="status"></p></fieldset>
+        </div>
+        <button class="mark-done" type="button" data-complete="ellenorzes">Befejeztem az önellenőrzést</button>
+      </section>
+
+      <section class="lesson-section tracked transfer" id="tovabblepes" data-step="tovabblepes">
+        <p class="step-kicker">08 · Továbbgondolás</p>
+        <h2>Próbáld meg egy kicsit továbbfejleszteni!</h2>
+        <p>Módosítsd úgy a programot, hogy a leggyakoribb faj száma mellett azt is adja vissza, hányszor figyelték meg!</p>
+        <div class="challenge"><span>Példa</span><code>[1, 4, 4, 4, 5, 3]</code><strong>→ 4-es faj, 3 megfigyelés</strong></div>
+        <details><summary>Megoldási ötlet</summary><p>A függvény végén két értéket adj vissza: <code>return eredmeny, gyakorisag[eredmeny]</code>.</p></details>
+        <button class="mark-done" type="button" data-complete="tovabblepes">Befejeztem a feladatot</button>
+        <div class="completion-message" id="completion-message" hidden><strong>Kész vagy!</strong><p>Végigértél a Madármegfigyelés feladaton.</p><a class="button primary" href="index.html">Vissza a feladatokhoz</a></div>
+      </section>
+    </article>
+  </main>
+
+  <footer><p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p></footer>
+  <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script>
+  <script src="lesson.js"></script>
+</body>
+</html>
