@@ -42,12 +42,12 @@
           <div class="lesson-meta"><span>◷ 20–25 perc</span><span>● Könnyű</span><span>⌁ Python</span></div>
         </div>
         <div class="goal-box">
-          <h2>Mit gyakorlunk ebben a feladatban?</h2>
+          <h2>Mit fogsz tudni a feladat végére?</h2>
           <ul class="check-list">
-            <li>megszámolni egy lista elemeinek előfordulását;</li>
-            <li>megkeresni a leggyakoribb elemet;</li>
-            <li>eldönteni, mi történjen holtversenynél;</li>
-            <li>elmondani, hogyan működik a program.</li>
+            <li>egy megfigyelési lista adatait feldolgozni;</li>
+            <li>megállapítani, melyik érték fordul elő a legtöbbször;</li>
+            <li>helyesen dönteni azonos eredmények esetén;</li>
+            <li>elmagyarázni a saját programod működését.</li>
           </ul>
         </div>
         <button class="mark-done" type="button" data-complete="celok">Elolvastam, kezdhetjük</button>
@@ -99,7 +99,7 @@
       <section class="lesson-section tracked" id="algoritmus" data-step="algoritmus">
         <p class="step-kicker">04 · Az algoritmus felfedezése</p>
         <h2>Számláljuk meg az előfordulásokat!</h2>
-        <p>A fajokat 1-től 5-ig számozzuk, ezért készítünk egy hat elemű számlálólistát. A nulladik hely üresen marad. Így nem kell számolgatni az indexeket: a 4-es fajhoz rögtön a lista 4. eleme tartozik.</p>
+        <p>A fajokat 1-től 5-ig számozzuk, ezért készítünk egy 6 elemű számlálólistát, a 0-s indexet pedig üresen hagyjuk. Így nem kell fejben eltolni az indexeket: a 4-es fajhoz közvetlenül a 4-es indexű hely tartozik.</p>
         <h3>A feldolgozandó megfigyelések</h3>
         <p>A program balról jobbra halad, és egyszerre mindig egy számot dolgoz fel:</p>
         <div class="data-strip observation-strip" id="observation-strip" aria-label="Az eredeti madármegfigyelések sorozata"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
@@ -156,7 +156,7 @@ print(leggyakoribb_madar(madarak))</textarea>
             <button class="button secondary" id="load-solution" type="button">Megoldás betöltése</button>
             <button class="button secondary copy-code" type="button" data-copy="python-editor">Kód másolása</button>
           </div>
-          <p class="lab-note" id="lab-note">Az első futtatás néhány másodpercig tarthat, mert a böngésző ekkor tölti be a Python-környezetet. <code>input()</code>-ra itt nincs szükség.</p>
+          <p class="lab-note" id="lab-note">Az első futtatás néhány másodpercig tarthat, mert a böngésző ekkor tölti be a Python-környezetet.</p>
           <div class="console-wrap">
             <div class="console-title"><span>Konzol kimenete</span><button id="clear-console" type="button">Törlés</button></div>
             <pre id="python-output" class="python-output" aria-live="polite">A program kimenete itt jelenik meg.</pre>
