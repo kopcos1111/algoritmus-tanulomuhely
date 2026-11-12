@@ -16,8 +16,8 @@
   document.getElementById('reset-progress').addEventListener('click', () => { completed.clear(); localStorage.removeItem(storageKey); updateProgress(); });
 
   const explanations = {
-    manual: ['2 film', 'A 3–5 film után az 5–8 film következhet. A 4–9 film átfedné ezeket.'],
-    choice: ['Amelyik a leghamarabb véget ér', 'A korábbi befejezés után több idő marad a további filmekre.'],
+    manual: ['2 film', 'A 3–5 film után az 5–8 film következhet, ezért két filmet tudunk megnézni. Ha az 1–9 filmet választanánk, utána már egyik másik film sem férne bele.'],
+    choice: ['Mert túl későn fejeződik be, így elveszi az időt a 3–5 és az 5–8 filmtől', 'Az 1–9 film kezdődik a leghamarabb, de csak 9-kor ér véget. Emiatt a 3–5 és az 5–8 film is kimaradna, így kettő helyett csak egy filmet tudnánk megnézni.'],
     q1: ['Befejezési idő szerint', 'Így mindig azt a filmet vizsgáljuk előbb, amelyik a leghamarabb felszabadítja az időnket.'],
     q2: ['Ha a kezdése legalább az előző befejezése', 'Az egyenlőség is jó: az új film kezdődhet pontosan az előző befejezésekor.'],
     q3: ['Mert egyetlen rövid film több másik vetítést is kizárhat az átfedés miatt', 'A film hossza önmagában nem elég. Az 5–7 közötti rövid film átfedi az 1–6 és a 6–12 filmet, ezért csak egy film fér bele; az 1–6 és a 6–12 együtt viszont kettő.'],
