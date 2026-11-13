@@ -6,6 +6,13 @@
   <meta name="description" content="Filmfesztivál – önállóan feldolgozható algoritmikus feladat 9–10. évfolyam számára.">
   <title>Filmfesztivál | Algoritmus Tanulóműhely</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    [hidden] { display: none !important; }
+    #sorting-animation[data-locked="true"] summary {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body class="lesson-page">
   <a class="skip-link" href="#lecke">Ugrás a leckéhez</a>
@@ -60,15 +67,50 @@
       <section class="lesson-section tracked" id="algoritmus" data-step="algoritmus">
         <p class="step-kicker">04 · Az algoritmus felfedezése</p><h2>Mi alapján rendezzük sorba a filmeket?</h2>
         <p>Elsőre adná magát, hogy a legkorábban kezdődő filmet válasszuk. De mi van akkor, ha ez a film szinte az egész napot elfoglalja? Közben több rövidebb vetítésről is lemaradhatunk.</p>
+
+        <h3>Nézzünk meg egy új példát!</h3>
+        <p>A következő kérdésekben már nem az előző három filmmel, hanem ezzel a négy vetítéssel dolgozunk:</p>
+        <div class="movie-list" aria-label="Az algoritmus felfedezéséhez használt filmek">
+          <div class="movie-time-card"><strong>1. film</strong><span><small>Kezdés</small><b>1</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>10</b></span></div>
+          <div class="movie-time-card"><strong>2. film</strong><span><small>Kezdés</small><b>2</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>3</b></span></div>
+          <div class="movie-time-card"><strong>3. film</strong><span><small>Kezdés</small><b>3</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>4</b></span></div>
+          <div class="movie-time-card"><strong>4. film</strong><span><small>Kezdés</small><b>4</b></span><i aria-hidden="true">→</i><span><small>Befejezés</small><b>5</b></span></div>
+        </div>
+
+        <fieldset class="quiz-card" data-question="start-counter">
+          <legend>1. Ha először az <code>1–10</code> filmet választjuk, hány további film fér még bele?</legend>
+          <label><input type="radio" name="start-counter" value="a"> Egy sem</label>
+          <label><input type="radio" name="start-counter" value="b"> Egy film</label>
+          <label><input type="radio" name="start-counter" value="c"> Két film</label>
+          <button class="check-answer discovery-intro-check" type="button" data-answer="a" data-target="start-counter-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="start-counter-feedback" role="status"></p>
+        </fieldset>
+
+        <fieldset class="quiz-card" data-question="strategy">
+          <legend>2. Melyik film választása után maradhat a legtöbb időnk a további vetítésekre?</legend>
+          <label><input type="radio" name="strategy" value="a"> Amelyik a leghamarabb kezdődik</label>
+          <label><input type="radio" name="strategy" value="b"> Amelyik a leghamarabb befejeződik</label>
+          <label><input type="radio" name="strategy" value="c"> Amelyik a legtovább tart</label>
+          <button class="check-answer discovery-intro-check" type="button" data-answer="b" data-target="strategy-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="strategy-feedback" role="status"></p>
+        </fieldset>
+
+        <details class="solution-box" id="sorting-animation" data-locked="true">
+          <summary id="sorting-animation-summary" aria-disabled="true">Animáció – a két helyes válasz után nyitható meg</summary>
+          <div class="solution-content">
         <h3>Próbáld ki kétféle rendezéssel!</h3>
-        <p>Az ellenpéldában az <code>1–10</code> film kezdődik a legkorábban, de ha ezt választjuk, utána már egyetlen másik film sem fér bele. A gombokkal rendezd át a filmeket, majd haladj végig rajtuk!</p>
+        <p>Az animációval összehasonlíthatod a két rendezést. Mindkét esetben haladj végig az összes filmen!</p>
         <div class="simulator" aria-live="polite">
-          <div class="sort-actions"><button class="button secondary sort-choice" id="sort-start" type="button" aria-pressed="false">Rendezés kezdési idő szerint</button><button class="button secondary sort-choice" id="sort-end" type="button" aria-pressed="false">Rendezés befejezési idő szerint</button></div>
+          <div class="sort-actions"><button class="button secondary sort-choice" id="sort-start" type="button" aria-pressed="false" disabled>Rendezés kezdési idő szerint</button><button class="button secondary sort-choice" id="sort-end" type="button" aria-pressed="false" disabled>Rendezés befejezési idő szerint</button></div>
           <div class="sim-header"><div><span>Vizsgált film</span><strong id="current-movie">–</strong></div><div><span>Kiválasztva</span><strong id="movie-count">0</strong></div></div>
           <div class="movie-schedule" id="movie-schedule"></div>
-          <p id="sim-explanation">Válassz rendezési módot, majd kattints a „Következő film” gombra!</p>
-          <div class="sim-actions"><button class="button primary" id="sim-next" type="button">Következő film</button><button class="button secondary" id="sim-reset" type="button">Újrakezdés</button></div>
+          <p id="sim-explanation">Először válaszolj helyesen a fenti két kérdésre!</p>
+          <div class="sim-actions"><button class="button primary" id="sim-next" type="button" disabled>Következő film</button><button class="button secondary" id="sim-reset" type="button" disabled>Újrakezdés</button></div>
         </div>
+          </div>
+        </details>
+
+        <div id="algorithm-conclusion" hidden>
         <div class="comparison-box"><div><strong>Kezdési idő szerint</strong><span>1 film</span><p>Az 1–10 filmet választjuk, ezért a többi már nem fér bele.</p></div><div><strong>Befejezési idő szerint</strong><span>3 film</span><p>A 2–3, 3–4 és 4–5 filmeket is meg tudjuk nézni.</p></div></div>
 
         <div class="callout story">
@@ -89,6 +131,7 @@
         <div class="algorithm-steps"><div><span>1</span><p>Rendezd a filmeket befejezési idő szerint növekvő sorrendbe.</p></div><div><span>2</span><p>Jegyezd meg, mikor ért véget az utoljára kiválasztott film.</p></div><div><span>3</span><p>Válaszd ki a következő filmet, ha a kezdése legalább ennyi.</p></div><div><span>4</span><p>Növeld a darabszámot, és jegyezd meg az új befejezési időt.</p></div></div>
         <p class="learning-note"><strong>Miért mohó?</strong> Minden lépésben azt a filmet választjuk, amelyik a lehető leghamarabb felszabadítja az időnket. Nem próbáljuk végig az összes lehetséges filmkombinációt.</p>
         <button class="mark-done" type="button" data-complete="algoritmus">Megértettem az algoritmust</button>
+        </div>
       </section>
 
       <section class="lesson-section tracked" id="programozas" data-step="programozas">
@@ -99,9 +142,15 @@
         <div class="coding-group">
           <div class="coding-group-title"><span>I.</span><div><strong>A bemenet feldolgozása</strong><p>A beolvasott időpontokból elkészítjük a filmek listáját.</p></div></div>
         <div class="coding-step summary-step">
-          <span class="coding-step-number">1</span><div><h3>Készítsük el a filmek listáját!</h3><p>Az első sor megadja a filmek számát. Ezután minden sorból kiolvassuk a kezdési és befejezési időt, számmá alakítjuk őket, majd egy párként hozzáadjuk a listához.</p>
-          <div class="code-lines"><div>n = int(input())</div><div>filmek = []</div><br><div>for _ in range(<input class="code-blank" data-answer="n" data-label="A ciklus ismétlésszáma" data-explain="Pontosan n film adatait kell beolvasni, ezért a ciklus range(n) szerint fut.">):</div><div>&nbsp;&nbsp;&nbsp;&nbsp;adatok = input().<input class="code-blank" data-answer="split" data-label="A bemeneti sor felbontása" data-explain="A split() a szóköznél választja szét a kezdési és befejezési időt.">()</div><div>&nbsp;&nbsp;&nbsp;&nbsp;kezdes = <input class="code-blank" data-answer="int" data-label="A kezdés számmá alakítása" data-explain="Az input() szöveget ad vissza, ezért az int() alakítja egész számmá.">(adatok[0])</div><div>&nbsp;&nbsp;&nbsp;&nbsp;befejezes = <input class="code-blank" data-answer="int" data-label="A befejezés számmá alakítása" data-explain="A befejezési időt is int() segítségével alakítjuk számmá.">(adatok[1])</div><div>&nbsp;&nbsp;&nbsp;&nbsp;filmek.<input class="code-blank wide" data-answer="append" data-label="A filmpár hozzáadása" data-explain="Az append() hozzáadja a (kezdes, befejezes) párt a filmek listájához.">((kezdes, befejezes))</div></div>
-          <button class="code-check" type="button">A beolvasás ellenőrzése</button><p class="code-feedback" role="status"></p>
+          <span class="coding-step-number">1</span><div><h3>Készítsük el a filmek listáját!</h3><p>Az első sor megadja a filmek számát. A ciklus fejlécét készen megkapod. Írd meg a ciklus belsejét: olvasd be a két időpontot, alakítsd őket egész számmá, majd add hozzá a filmpárt a listához!</p>
+          <textarea id="input-block-editor" class="program-input" rows="9" spellcheck="false">n = int(input())
+filmek = []
+
+for _ in range(n):
+    # Ide írd a ciklus négy utasítását!
+    pass</textarea>
+          <button class="block-code-check" id="check-input-block" type="button">A beolvasás ellenőrzése</button><p class="code-feedback" id="input-block-feedback" role="status"></p>
+          <details class="teacher-note"><summary>Segítség a beolvasáshoz</summary><p>Egy sorban két, szóközzel elválasztott értéket kapsz. Először az <code>input().split()</code> segítségével bontsd fel a sort, utána az <code>int()</code> használatával alakítsd számmá a két elemet. Végül az <code>append()</code> utasítással tedd a párt a <code>filmek</code> listába.</p></details>
           <div class="data-change"><span>Bemeneti sorok</span><code>1 9<br>3 5<br>5 8</code><b>→</b><span>Elkészült lista</span><code>[(1, 9), (3, 5), (5, 8)]</code></div></div>
         </div>
         </div>
@@ -154,7 +203,7 @@
 
         <div class="learning-note program-order-note"><strong>Miért más a sorrend a kész programban?</strong> A megoldás átgondolásakor először azt követtük végig, hogyan lesz a bemenetből eredmény. A kész Python-programban viszont előbb leírjuk a két függvényt, és csak utánuk olvassuk be az adatokat. Így a függvények már léteznek, amikor meghívjuk őket.</div>
 
-        <h3 class="final-program-title">Próbáld ki a programodat!</h3><p>Az alábbi kezdőkódból még hiányzik a film kiválasztásának feltétele és a hozzá tartozó két értékadás. Egészítsd ki a korábbi lépések alapján, majd futtasd saját bemenettel!</p>
+        <h3 class="final-program-title">Most próbáld meg segítség nélkül!</h3><p>A kisebb kódrészleteket már külön-külön elkészítetted. Most írd meg önállóan a <code>legtobb_film()</code> függvény teljes törzsét! A beolvasást és a segédfüggvényt készen megkapod, így most az algoritmus összeállítására tudsz figyelni.</p>
         <div class="python-lab"><div class="lab-heading"><div><span class="lab-badge">Interaktív Python-labor</span><h3>Egészítsd ki, majd futtasd a programot!</h3></div><span class="runtime-status" id="runtime-status">Python még nincs betöltve</span></div>
           <label class="lab-input-label" for="program-input">Bemenet</label><textarea id="program-input" class="program-input" spellcheck="false">3
 1 9
@@ -165,24 +214,12 @@
 
 
 def legtobb_film(filmek):
-    # 1. Rendezd a filmeket befejezési idő szerint!
-    filmek.sort(key=befejezesi_ido)
-
-    megnezett_filmek = 0
-    elozo_befejezes = 0
-
-    # 2. Járd be a rendezett listát!
-    for film in filmek:
-        kezdes = film[0]
-        befejezes = film[1]
-
-        # 3. Egészítsd ki a kiválasztás feltételét és utasításait!
-        # if ...:
-        #     ...
-        #     ...
-        pass
-
-    return megnezett_filmek
+    # Írd meg önállóan a függvény törzsét!
+    # 1. Rendezd a filmeket.
+    # 2. Készítsd el a szükséges változókat.
+    # 3. Járd be és válaszd ki a megfelelő filmeket.
+    # 4. Add vissza a megnézett filmek számát.
+    pass
 
 
 n = int(input())
@@ -212,6 +249,34 @@ print(eredmeny)</textarea>
 2 3
 3 4
 4 5</code></pre><span><button class="copy-code test-copy" type="button" data-copy="movie-test-3">Bemenet másolása</button><strong>Várt eredmény: 3</strong></span></div></div>
+
+        <div class="hint-stack">
+          <h3>Elakadtál? A segítségeket sorban nyisd meg!</h3>
+          <details><summary><span>1. segítség</span> Milyen fő lépések kellenek?</summary><p>Először rendezd a filmeket befejezési idő szerint. Ezután hozz létre két változót: az egyik számolja a kiválasztott filmeket, a másik az utoljára kiválasztott film befejezését tárolja.</p></details>
+          <details><summary><span>2. segítség</span> Hogyan járd be a listát?</summary><pre><code>for film in filmek:
+    kezdes = film[0]
+    befejezes = film[1]
+
+    ha a film kezdése legalább az előző befejezés:
+        növeld a számlálót
+        tárold el az új befejezést</code></pre></details>
+          <details><summary><span>3. segítség</span> A függvény kódrészlete</summary><pre><code>def legtobb_film(filmek):
+    filmek.sort(key=befejezesi_ido)
+
+    megnezett_filmek = 0
+    elozo_befejezes = 0
+
+    for film in filmek:
+        kezdes = film[0]
+        befejezes = film[1]
+
+        if kezdes &gt;= elozo_befejezes:
+            megnezett_filmek += 1
+            elozo_befejezes = befejezes
+
+    return megnezett_filmek</code></pre></details>
+        </div>
+
         <details class="solution-box"><summary>A program részletes magyarázata</summary><div class="solution-content"><div class="code-block"><div class="code-toolbar"><span>megoldas.py</span><button class="copy-code" type="button" data-copy="solution-code">Kód másolása</button></div><pre id="solution-code"><code>def befejezesi_ido(film):
     return film[1]
 
@@ -289,6 +354,6 @@ input = sys.stdin.readline</code></pre><p>Ez az <code>input()</code> hívást gy
     </article>
   </main>
   <footer><p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p></footer>
-  <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script><script src="movie.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script><script src="movie.js?v=6"></script>
 </body>
 </html>

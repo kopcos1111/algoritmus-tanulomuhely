@@ -6,6 +6,78 @@
 <meta name="description" content="Városok és járatok – interaktív gráfalgoritmus-feladat.">
 <title>Városok és járatok | Algoritmus Tanulóműhely</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+/* A kézi példa egyetlen, együtt méreteződő SVG-ábra. */
+.static-map.svg-route-map {
+min-height: 0;
+padding: 18px;
+}
+.static-map .route-picture {
+display: block;
+width: 100%;
+height: auto;
+}
+.static-map .route-line {
+fill: none;
+stroke: #4774c5;
+stroke-width: 5px;
+stroke-linecap: round;
+stroke-linejoin: round;
+}
+.static-map .route-label-box {
+fill: #dfeaff;
+stroke: #c8daf8;
+stroke-width: 1.5px;
+}
+.static-map .route-label {
+fill: #244a85;
+font: 800 19px Arial, sans-serif;
+text-anchor: middle;
+dominant-baseline: middle;
+}
+.static-map .city-circle {
+fill: #07183e;
+stroke: #fff;
+stroke-width: 5px;
+filter: url(#static-city-shadow);
+}
+.static-map .city-number {
+fill: #fff;
+font: 900 27px Arial, sans-serif;
+text-anchor: middle;
+dominant-baseline: middle;
+}
+.code-task-editor {
+display: block;
+width: 100%;
+min-height: 190px;
+resize: vertical;
+margin: 14px 0 0;
+padding: 16px;
+border: 2px solid #33496f;
+border-radius: 10px;
+outline: none;
+color: #e8f0ff;
+background: #081329;
+font: 500 .86rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace;
+tab-size: 4;
+}
+.code-task-editor:focus { border-color: #22c3d6; }
+.code-task-editor.correct { border-color: #42bd7b; }
+.code-task-editor.incorrect { border-color: #e56b76; }
+.code-task-editor.dfs-task { min-height: 330px; }
+.code-task-editor.check-task { min-height: 270px; }
+.code-task-editor.reverse-task { min-height: 370px; }
+.code-task-note {
+margin: 12px 0 0;
+color: #56647b;
+font-size: .88rem;
+}
+@media (max-width: 620px) {
+.static-map.svg-route-map { padding: 8px; }
+.code-task-editor { font-size: .76rem; }
+}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#tananyag">Ugrás a tananyaghoz</a>
@@ -80,7 +152,12 @@
 </div>
 </div>
 <h3>Bemenet formátuma</h3>
-<p>Az első sorban <code>n</code> és <code>m</code> áll. Ezután <code>m</code> sor következik; az <code>a b</code> sor egy <code>a → b</code> irányú járatot jelent.</p>
+<p>Az első sor két, szóközzel elválasztott egész számot tartalmaz:</p>
+<ul>
+  <li>az <code>n</code> a városok száma;</li>
+  <li>az <code>m</code> a járatok száma.</li>
+</ul>
+<p>Ezután <code>m</code> sor következik. Minden sorban két szám, <code>a</code> és <code>b</code> található. Az <code>a b</code> sor azt jelenti, hogy az <code>a</code> városból közvetlen járat indul a <code>b</code> városba, vagyis a járat iránya <code>a → b</code>.</p>
 <div class="io-grid">
 <div class="io-card">
 <span>Példabemenet</span>
@@ -103,16 +180,66 @@
 <p class="step-kicker">03 · Dolgozd fel kézzel!</p>
 <h2>Előbb nézzük meg a járatokat</h2>
 <p>A nyíl iránya számít. Attól, hogy az 1-esből eljutunk a 4-esbe, még nem biztos, hogy a 4-esből is vissza tudunk jutni.</p>
-<div class="route-map static-map">
-<span class="city-node city-1">1</span>
-<span class="city-node city-2">2</span>
-<span class="city-node city-3">3</span>
-<span class="city-node city-4">4</span>
-<span class="route-edge e12">1 → 2</span>
-<span class="route-edge e23">2 → 3</span>
-<span class="route-edge e31">3 → 1</span>
-<span class="route-edge e14">1 → 4</span>
-<span class="route-edge e34">3 → 4</span>
+<div class="route-map static-map svg-route-map">
+<svg class="route-picture" viewBox="0 0 760 420" role="img" aria-labelledby="static-map-title static-map-description">
+<title id="static-map-title">A példában szereplő városok és járatok</title>
+<desc id="static-map-description">Járatok: 1-ből 2-be, 2-ből 3-ba, 3-ból 1-be, 1-ből 4-be és 3-ból 4-be.</desc>
+<defs>
+<marker id="static-route-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3" markerHeight="3" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#4774c5"></path>
+</marker>
+<filter id="static-city-shadow" x="-50%" y="-50%" width="200%" height="200%">
+<feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#0b1735" flood-opacity="0.23"></feDropShadow>
+</filter>
+</defs>
+
+<!-- Járatok -->
+<path class="route-line" d="M 132 194 L 337 96" marker-end="url(#static-route-arrow)"></path>
+<path class="route-line" d="M 403 96 L 628 194" marker-end="url(#static-route-arrow)"></path>
+<path class="route-line" d="M 625 210 L 135 210" marker-end="url(#static-route-arrow)"></path>
+<path class="route-line" d="M 132 226 L 348 334" marker-end="url(#static-route-arrow)"></path>
+<path class="route-line" d="M 628 226 L 412 334" marker-end="url(#static-route-arrow)"></path>
+
+<!-- A járatok iránya a nyilak fölött -->
+<g>
+<rect class="route-label-box" x="195" y="111" width="76" height="34" rx="9"></rect>
+<text class="route-label" x="233" y="129">1 → 2</text>
+</g>
+<g>
+<rect class="route-label-box" x="493" y="111" width="76" height="34" rx="9"></rect>
+<text class="route-label" x="531" y="129">2 → 3</text>
+</g>
+<g>
+<rect class="route-label-box" x="342" y="164" width="76" height="34" rx="9"></rect>
+<text class="route-label" x="380" y="182">3 → 1</text>
+</g>
+<g>
+<rect class="route-label-box" x="198" y="238" width="76" height="34" rx="9"></rect>
+<text class="route-label" x="236" y="256">1 → 4</text>
+</g>
+<g>
+<rect class="route-label-box" x="486" y="238" width="76" height="34" rx="9"></rect>
+<text class="route-label" x="524" y="256">3 → 4</text>
+</g>
+
+<!-- Városok -->
+<g>
+<circle class="city-circle" cx="100" cy="210" r="36"></circle>
+<text class="city-number" x="100" y="211">1</text>
+</g>
+<g>
+<circle class="city-circle" cx="370" cy="80" r="36"></circle>
+<text class="city-number" x="370" y="81">2</text>
+</g>
+<g>
+<circle class="city-circle" cx="660" cy="210" r="36"></circle>
+<text class="city-number" x="660" y="211">3</text>
+</g>
+<g>
+<circle class="city-circle" cx="380" cy="350" r="36"></circle>
+<text class="city-number" x="380" y="351">4</text>
+</g>
+</svg>
 </div>
 <fieldset class="quiz-card" data-question="manual">
 <legend>1. Melyik állítás igaz?</legend>
@@ -237,40 +364,31 @@
 <span>I.</span>
 <div>
 <strong>A gráfok elkészítése</strong>
-<p>A járatot eredeti és fordított irányban is eltároljuk.</p>
+<p>A listák már elkészültek. Neked a járatok beolvasását és eltárolását kell megírnod.</p>
 </div>
 </div>
 <div class="coding-step">
 <span class="coding-step-number">1</span>
 <div>
-<h3>Készítsük el a listákat!</h3>
-<div class="code-lines">
-<div>n, m = map(int, input().split())</div>
-<div>graf = []</div>
-<div>forditott_graf = []</div>
-<br>
-<div>for _ in range(<input class="code-blank" data-answer="n + 1" data-label="A listák száma" data-explain="Az 1-től n-ig számozott városok és a nem használt 0. elem miatt n + 1 lista kell.">):</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;graf.append([])</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;forditott_graf.append([])</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
-</div>
-</div>
-<div class="coding-step">
-<span class="coding-step-number">2</span>
-<div>
-<h3>Tároljuk el a járatokat!</h3>
-<div class="code-lines">
-<div>for _ in range(m):</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;indulas, erkezes = map(int, input().split())</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;graf[indulas].<input class="code-blank wide" data-answer="append" data-label="Az eredeti járat hozzáadása" data-explain="Az append() teszi az érkezést az indulási város listájába.">(erkezes)</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;forditott_graf[<input class="code-blank wide" data-answer="erkezes" data-label="A fordított járat indulása" data-explain="A fordított gráfban az eredeti érkezésből indulunk.">].append(<input class="code-blank wide" data-answer="indulas" data-label="A fordított járat érkezése" data-explain="A fordított járat az eredeti indulásba érkezik.">)</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
+<h3>Olvasd be és tárold el a járatokat!</h3>
+<p>Az alábbi kezdőkódban a két gráf üres listái már elkészültek. Írd meg azt a ciklust, amely pontosan <code>m</code> járatot olvas be, majd mindkét gráfba beteszi őket!</p>
+<textarea class="code-task-editor" id="task-graphs" data-code-task="graphs" spellcheck="false">n, m = map(int, input().split())
+
+graf = []
+forditott_graf = []
+
+for _ in range(n + 1):
+    graf.append([])
+    forditott_graf.append([])
+
+# Innen folytasd!</textarea>
+<button class="code-check code-task-check" type="button" data-task="graphs">Kódrész ellenőrzése</button>
+<p class="code-feedback" id="graphs-feedback"></p>
+<details class="teacher-note">
+<summary>Segítség, ha elakadtál</summary>
+<p>Ismételd meg a beolvasást <code>m</code>-szer! Az eredeti gráfban <code>indulas → erkezes</code>, a fordítottban pedig <code>erkezes → indulas</code> irányt tárolj.</p>
+</details>
+<p class="code-task-note">Most már nem egy-egy szót kell pótolnod: a teljes beolvasó ciklust neked kell összeállítanod.</p>
 </div>
 </div>
 </div>
@@ -279,59 +397,40 @@
 <span>II.</span>
 <div>
 <strong>A mélységi bejárás</strong>
-<p>Veremmel végigjárjuk a kezdővárosból elérhető részt.</p>
+<p>A kezdőértékeket megkapod, de a bejárás teljes ciklusát neked kell megírnod.</p>
 </div>
 </div>
 <div class="coding-step">
-<span class="coding-step-number">3</span>
+<span class="coding-step-number">2</span>
 <div>
-<h3>Állítsuk be a kezdőértékeket!</h3>
-<div class="code-lines">
-<div>def melysegi_bejaras(graf, kezdo_varos):</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;meglatogatott = [False] * <input class="code-blank wide" data-answer="len(graf)" data-label="A jelölőlista hossza" data-explain="Minden gráflistához egy logikai érték kell.">
+<h3>Írd meg a bejárás ciklusát!</h3>
+<p>Az animáció alapján egészítsd ki a függvényt! A program addig dolgozzon, amíg van város a veremben, és a végén adja vissza a <code>meglatogatott</code> listát.</p>
+<textarea class="code-task-editor dfs-task" id="task-dfs" data-code-task="dfs" spellcheck="false">def melysegi_bejaras(graf, kezdo_varos):
+    meglatogatott = [False] * len(graf)
+    verem = [kezdo_varos]
+
+    # Innen írd meg a bejárást!</textarea>
+<button class="code-check code-task-check" type="button" data-task="dfs">Kódrész ellenőrzése</button>
+<p class="code-feedback" id="dfs-feedback"></p>
+<div class="hint-stack">
+<details>
+<summary><span>1.</span> segítség – A verem feldolgozása</summary>
+<p>Amíg a verem nem üres, a <code>pop()</code> segítségével vedd ki belőle az aktuális várost.</p>
+</details>
+<details>
+<summary><span>2.</span> segítség – A város megjelölése</summary>
+<p>Csak a még nem látogatott várost dolgozd fel, majd állítsd a hozzá tartozó értéket <code>True</code>-ra.</p>
+</details>
+<details>
+<summary><span>3.</span> segítség – A következő városok</summary>
+<p>Járd végig a <code>graf[varos]</code> listát, és a még nem látogatott szomszédokat tedd a verembe. A ciklus után add vissza a jelölőlistát.</p>
+</details>
 </div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;verem = [<input class="code-blank wide" data-answer="kezdo_varos" data-label="A verem első eleme" data-explain="A bejárás a paraméterként kapott városból indul.">]</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
-</div>
-</div>
-<div class="coding-step">
-<span class="coding-step-number">4</span>
-<div>
-<h3>Dolgozzuk fel a vermet!</h3>
-<div class="code-lines">
-<div>&nbsp;&nbsp;&nbsp;&nbsp;while len(verem) > 0:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;varos = verem.<input class="code-blank wide" data-answer="pop" data-label="A verem tetejének kivétele" data-explain="A pop() kiveszi a lista utolsó elemét.">()</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if not meglatogatott[varos]:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meglatogatott[varos] = <input class="code-blank wide" data-answer="True" data-label="A város megjelölése" data-explain="A True jelzi, hogy feldolgoztuk a várost.">
-</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
-</div>
-</div>
-<div class="coding-step">
-<span class="coding-step-number">5</span>
-<div>
-<h3>Tegyük verembe a következő városokat!</h3>
-<div class="code-lines">
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for kovetkezo_varos in graf[varos]:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if not meglatogatott[kovetkezo_varos]:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verem.<input class="code-blank wide" data-answer="append" data-label="A következő város hozzáadása" data-explain="Az append() teszi a szomszédot a verembe.">(kovetkezo_varos)</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;return <input class="code-blank code-long" data-answer="meglatogatott" data-label="A visszaadott lista" data-explain="Ebből tudjuk meg, mely városokat értük el.">
-</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
 </div>
 </div>
 <details class="teacher-note">
 <summary>Gyakori hiba a veremnél</summary>
-<p>A <code>pop()</code> kiveszi az aktuális várost. A még nem látogatott szomszédokat külön, az <code>append()</code> segítségével kell betenni.</p>
+<p>A <code>return meglatogatott</code> a <code>while</code> ciklus után legyen. Ha a ciklus belsejébe kerül, a függvény már az első feldolgozott város után leáll.</p>
 </details>
 </div>
 <div class="coding-group">
@@ -339,39 +438,26 @@
 <span>III.</span>
 <div>
 <strong>Az első ellenőrzés</strong>
-<p>Megnézzük, eljutunk-e az 1-esből minden városba.</p>
+<p>A bejárás meghívását megkapod. Neked kell megkeresned és kiírnod az első nem elérhető várost.</p>
 </div>
 </div>
 <div class="coding-step">
-<span class="coding-step-number">6</span>
+<span class="coding-step-number">3</span>
 <div>
-<h3>Járjuk be az eredeti gráfot!</h3>
-<div class="code-lines">
-<div>elerheto = melysegi_bejaras(<input class="code-blank wide" data-answer="graf" data-label="A bejárt gráf" data-explain="Először az eredeti irányokat vizsgáljuk.">, 1)</div>
-<div>hibas_varos = 0</div>
-<div>for varos in range(1, n + 1):</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;if not elerheto[varos]:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hibas_varos = varos</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="code-blank wide" data-answer="break" data-label="A keresés leállítása" data-explain="Egyetlen ellenpélda elég.">
-</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
-</div>
-</div>
-<div class="coding-step">
-<span class="coding-step-number">7</span>
-<div>
-<h3>Írjuk ki az első ellenpéldát!</h3>
-<div class="code-lines">
-<div>if hibas_varos != 0:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;print("NO")</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;print(<input class="code-blank" data-answer="1" data-label="Az induló város" data-explain="Az 1-esből indítottuk a bejárást.">, <input class="code-blank code-long" data-answer="hibas_varos" data-label="A nem elérhető város" data-explain="Ezt a várost nem jelölte meg a bejárás.">)</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
+<h3>Keresd meg az első ellenpéldát!</h3>
+<p>Az <code>elerheto</code> listában minden városhoz egy logikai érték tartozik. Vizsgáld meg az 1-től <code>n</code>-ig számozott városokat! Ha találsz egy nem elérhető várost, egyetlen ellenpélda már elég.</p>
+<textarea class="code-task-editor check-task" id="task-original-check" data-code-task="original" spellcheck="false">elerheto = melysegi_bejaras(graf, 1)
+hibas_varos = 0
+
+# Keresd meg az első nem elérhető várost!
+
+# Ha találtál ilyet, írd ki a NO választ és az ellenpéldát!</textarea>
+<button class="code-check code-task-check" type="button" data-task="original">Kódrész ellenőrzése</button>
+<p class="code-feedback" id="original-feedback"></p>
+<details class="teacher-note">
+<summary>Segítség, ha elakadtál</summary>
+<p>A ciklusban az <code>elerheto[varos]</code> értékét vizsgáld. Ha ez hamis, jegyezd meg a várost, majd állítsd le a keresést. Az ellenpélda sorrendje ebben a vizsgálatban <code>1, hibas_varos</code>.</p>
+</details>
 </div>
 </div>
 </div>
@@ -380,54 +466,46 @@
 <span>IV.</span>
 <div>
 <strong>A fordított gráf ellenőrzése</strong>
-<p>Most azt vizsgáljuk, minden városból vissza lehet-e jutni az 1-esbe.</p>
+<p>Most alkalmazd önállóan az előző ellenőrzés gondolatmenetét a fordított gráfra!</p>
 </div>
 </div>
 <div class="coding-step">
-<span class="coding-step-number">8</span>
+<span class="coding-step-number">4</span>
 <div>
-<h3>Járjuk be a fordított gráfot!</h3>
-<div class="code-lines">
-<div>else:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;visszafele_elerheto = melysegi_bejaras(<input class="code-blank code-long" data-answer="forditott_graf" data-label="A második gráf" data-explain="A fordított gráf mutatja meg, honnan jutunk vissza az 1-esbe.">, 1)</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;for varos in range(1, n + 1):</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if not visszafele_elerheto[varos]:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hibas_varos = varos</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</div>
+<h3>Fejezd be önállóan a programot!</h3>
+<p>Ez a rész szándékosan ad kevesebb segítséget. Az első ellenőrzés mintájára járd be a fordított gráfot, keress ellenpéldát, majd írd ki a megfelelő választ!</p>
+<textarea class="code-task-editor reverse-task" id="task-reversed-check" data-code-task="reversed" spellcheck="false">else:
+    # Járd be a fordított gráfot!
+
+    # Keresd meg az első várost, amelyet nem értél el!
+
+    # Írd ki a megfelelő ellenpéldát vagy a YES választ!</textarea>
+<button class="code-check code-task-check" type="button" data-task="reversed">Kódrész ellenőrzése</button>
+<p class="code-feedback" id="reversed-feedback"></p>
+<div class="hint-stack">
+<details>
+<summary><span>1.</span> segítség – Melyik gráfot járjuk be?</summary>
+<p>A <code>melysegi_bejaras()</code> függvénynek most a <code>forditott_graf</code> listát add át, a kezdőváros továbbra is az 1-es.</p>
+</details>
+<details>
+<summary><span>2.</span> segítség – Az ellenpélda sorrendje</summary>
+<p>Ha a fordított gráfban nem érted el a <code>hibas_varos</code> értékét, akkor az eredeti gráfban ebből a városból nem lehet eljutni az 1-esbe. Ezért a kiírás sorrendje <code>hibas_varos, 1</code>.</p>
+</details>
 </div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
-</div>
-</div>
-<div class="coding-step">
-<span class="coding-step-number">9</span>
-<div>
-<h3>Adjuk meg a végső választ!</h3>
-<div class="code-lines">
-<div>&nbsp;&nbsp;&nbsp;&nbsp;if hibas_varos != 0:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("NO")</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<input class="code-blank code-long" data-answer="hibas_varos" data-label="Az induló város" data-explain="Ebből a városból nem jutunk az 1-esbe.">, 1)</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;else:</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<input class="code-blank wide" data-answer='"YES"' data-label="A sikeres válasz" data-explain="Mindkét bejárás minden várost elért.">)</div>
-</div>
-<button class="code-check" type="button">Ellenőrzés</button>
-<p class="code-feedback">
-</p>
 </div>
 </div>
 <details class="teacher-note">
-<summary>Gyakori hiba az ellenpélda sorrendjében</summary>
-<p>A második vizsgálatnál <code>hibas_varos, 1</code> a helyes sorrend, mert az eredeti gráfban ebből a városból nem lehet eljutni az 1-esbe.</p>
+<summary>Gyakori hiba a YES kiírásánál</summary>
+<p>A <code>YES</code> választ csak a teljes második ciklus után írd ki. Ha a ciklus belsejébe kerül, a program túl korán mondhatja azt, hogy minden város megfelelő.</p>
 </details>
 </div>
 <h3 class="final-program-title">Próbáld ki a programodat!</h3>
-<p>A kezdőkódból a két bejárás meghívása és az eredmény kiírása hiányzik. Egészítsd ki, vagy töltsd be a teljes megoldást!</p>
+<p>Most rakd össze egyben a négy elkészített programrészt! A szerkezetet megkapod, de a bejáró függvényt, a gráfok feltöltését és a két ellenőrzést is neked kell beírnod.</p>
 <div class="python-lab">
 <div class="lab-heading">
 <div>
 <span class="lab-badge">Interaktív Python-labor</span>
-<h3>Egészítsd ki, majd futtasd!</h3>
+<h3>Írd meg, majd teszteld a teljes programot!</h3>
 </div>
 <span class="runtime-status" id="runtime-status">Python még nincs betöltve</span>
 </div>
@@ -438,34 +516,25 @@
 3 1
 1 4
 3 4</textarea>
-<textarea id="python-editor" class="python-editor" spellcheck="false">def melysegi_bejaras(graf, kezdo_varos):
-    meglatogatott = [False] * len(graf)
-    verem = [kezdo_varos]
-    while len(verem) > 0:
-        varos = verem.pop()
-        if not meglatogatott[varos]:
-            meglatogatott[varos] = True
-            for kovetkezo_varos in graf[varos]:
-                if not meglatogatott[kovetkezo_varos]:
-                    verem.append(kovetkezo_varos)
-    return meglatogatott
+<textarea id="python-editor" class="python-editor" spellcheck="false"># 1. Írd meg a melysegi_bejaras() függvényt!
+
 
 n, m = map(int, input().split())
-graf = [[] for _ in range(n + 1)]
-forditott_graf = [[] for _ in range(n + 1)]
-for _ in range(m):
-    indulas, erkezes = map(int, input().split())
-    graf[indulas].append(erkezes)
-    forditott_graf[erkezes].append(indulas)
 
-# Innen egészítsd ki a programot!</textarea>
+# 2. Készítsd el és töltsd fel az eredeti és a fordított gráfot!
+
+
+# 3. Ellenőrizd, hogy az 1-esből minden város elérhető-e!
+
+
+# 4. Ha igen, végezd el a fordított gráf ellenőrzését is!</textarea>
 <div class="lab-actions">
 <button class="button primary" id="run-python" type="button">Program futtatása</button>
 <button class="button test-button" id="run-tests" type="button">Tesztek futtatása</button>
 <button class="button secondary" id="reset-code" type="button">Kezdőkód</button>
 <button class="button secondary" id="load-solution" type="button">Teljes megoldás betöltése</button>
 </div>
-<p class="lab-note">A Python az első futtatáskor néhány másodperc alatt töltődik be.</p>
+<p class="lab-note">Ha elakadtál, a teljes megoldást bármikor betöltheted. A Python az első futtatáskor néhány másodperc alatt töltődik be.</p>
 <div class="console-wrap">
 <div class="console-title">
 <span>Kimenet</span>
@@ -627,7 +696,7 @@ for _ in range(m):
 </footer>
 <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js">
 </script>
-<script src="graph.js">
+<script src="graph.js?v=3">
 </script>
 </body>
 </html>

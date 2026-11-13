@@ -18,11 +18,40 @@
   const explanations = {
     manual: ['2 film', 'A 3–5 film után az 5–8 film következhet, ezért két filmet tudunk megnézni. Ha az 1–9 filmet választanánk, utána már egyik másik film sem férne bele.'],
     choice: ['Mert túl későn fejeződik be, így elveszi az időt a 3–5 és az 5–8 filmtől', 'Az 1–9 film kezdődik a leghamarabb, de csak 9-kor ér véget. Emiatt a 3–5 és az 5–8 film is kimaradna, így kettő helyett csak egy filmet tudnánk megnézni.'],
+    'start-counter': ['Egy sem', 'Az 1–10 film csak 10-kor ér véget, ezért a 2–3, a 3–4 és a 4–5 film is kimaradna.'],
+    strategy: ['Amelyik a leghamarabb befejeződik', 'A korábban befejeződő film után több idő marad a további vetítésekre. Az animációval most ellenőrizheted ezt az ötletet.'],
     q1: ['Befejezési idő szerint', 'Így mindig azt a filmet vizsgáljuk előbb, amelyik a leghamarabb felszabadítja az időnket.'],
     q2: ['Ha a kezdése legalább az előző befejezése', 'Az egyenlőség is jó: az új film kezdődhet pontosan az előző befejezésekor.'],
     q3: ['Mert egyetlen rövid film több másik vetítést is kizárhat az átfedés miatt', 'A film hossza önmagában nem elég. Az 5–7 közötti rövid film átfedi az 1–6 és a 6–12 filmet, ezért csak egy film fér bele; az 1–6 és a 6–12 együtt viszont kettő.'],
     q4: ['O(n log n)', 'A rendezés O(n log n), az utána következő egyszeri bejárás O(n). A rendezés határozza meg a teljes futási időt.']
   };
+  const introSolved = new Set();
+
+  function unlockSortingAnimation() {
+    const ready = introSolved.size === 2;
+    const animation = document.getElementById('sorting-animation');
+    const animationSummary = document.getElementById('sorting-animation-summary');
+    animation.dataset.locked = String(!ready);
+    animationSummary.setAttribute('aria-disabled', String(!ready));
+    animationSummary.textContent = ready
+      ? 'Animáció megnyitása'
+      : 'Animáció – a két helyes válasz után nyitható meg';
+    if (!ready) animation.open = false;
+    document.querySelectorAll('.sort-choice').forEach(button => { button.disabled = !ready; });
+    document.getElementById('sim-next').disabled = !ready;
+    document.getElementById('sim-reset').disabled = !ready;
+    document.getElementById('sim-explanation').textContent = ready
+      ? 'Válassz rendezési módot, majd kattints a „Következő film” gombra!'
+      : 'Először válaszolj helyesen a fenti két kérdésre!';
+  }
+
+  document.getElementById('sorting-animation-summary').addEventListener('click', event => {
+    if (introSolved.size !== 2) event.preventDefault();
+  });
+  document.getElementById('sorting-animation').addEventListener('toggle', event => {
+    if (introSolved.size !== 2 && event.currentTarget.open) event.currentTarget.open = false;
+  });
+
   document.querySelectorAll('.check-answer').forEach(button => button.addEventListener('click', () => {
     const fieldset = button.closest('fieldset');
     const selected = fieldset.querySelector('input:checked');
@@ -33,6 +62,11 @@
     const selectedText = selected.parentElement.textContent.trim();
     feedback.className = 'feedback ' + (right ? 'correct' : 'incorrect');
     feedback.textContent = right ? 'Helyes. ' + explanations[key][1] : 'A választott válasz: ' + selectedText + '\nA helyes válasz: ' + explanations[key][0] + '\nMiért? ' + explanations[key][1];
+    if (button.classList.contains('discovery-intro-check')) {
+      if (right) introSolved.add(key);
+      else introSolved.delete(key);
+      unlockSortingAnimation();
+    }
   }));
 
   function normalizeCode(value) {
@@ -58,11 +92,34 @@
     }
   }));
 
+  document.getElementById('check-input-block').addEventListener('click', () => {
+    const editor = document.getElementById('input-block-editor');
+    const feedback = document.getElementById('input-block-feedback');
+    const code = editor.value.replace(/\s+/g, '');
+    const required = [
+      ['adatok=input().split()', 'a bemeneti sor felbontása az input().split() segítségével'],
+      ['kezdes=int(adatok[0])', 'a kezdési idő egész számmá alakítása'],
+      ['befejezes=int(adatok[1])', 'a befejezési idő egész számmá alakítása'],
+      ['filmek.append((kezdes,befejezes))', 'a (kezdes, befejezes) pár hozzáadása a listához']
+    ];
+    const missing = required.filter(([part]) => !code.includes(part)).map(([, message]) => message);
+    if (code.includes('pass')) missing.push('a pass helyére valódi utasítások kerüljenek');
+
+    if (missing.length === 0) {
+      feedback.className = 'code-feedback correct';
+      feedback.textContent = 'Helyes. Beolvastad, számmá alakítottad és eltároltad mindkét időpontot.';
+    } else {
+      feedback.className = 'code-feedback incorrect';
+      feedback.textContent = 'Még nem teljes a beolvasás. Ellenőrizd ezeket:\n– ' + missing.join('\n– ');
+    }
+  });
+
   const originalMovies = [[1, 10], [2, 3], [3, 4], [4, 5]];
   let movies = [...originalMovies];
   let movieIndex = 0, lastEnd = 0, count = 0;
   let movieButtons = [];
   let sortMode = '';
+  const triedModes = new Set();
   function renderMovies() {
     const schedule = document.getElementById('movie-schedule');
     schedule.innerHTML = movies.map(([start, end]) => `<button type="button">Kezdés: ${start} → Befejezés: ${end}</button>`).join('');
@@ -97,9 +154,20 @@
     if (accepted) { count++; lastEnd = end; document.getElementById('sim-explanation').textContent = 'Kiválasztjuk, mert ' + start + ' ≥ ' + previousEnd + '. Az új befejezési idő: ' + end + '.'; }
     else document.getElementById('sim-explanation').textContent = 'Kihagyjuk, mert ' + start + ' < ' + lastEnd + ', ezért átfedné az előző filmet.';
     document.getElementById('movie-count').textContent = count; movieIndex++;
+    if (movieIndex === movies.length) {
+      triedModes.add(sortMode);
+      if (triedModes.size === 2) {
+        document.getElementById('algorithm-conclusion').hidden = false;
+        document.getElementById('sim-explanation').textContent += ' Mindkét rendezést kipróbáltad. Az összehasonlítás és az algoritmus most megjelent az animáció alatt.';
+      } else {
+        document.getElementById('sim-explanation').textContent += ' Most próbáld ki a másik rendezési módot is!';
+      }
+    }
   });
   document.getElementById('sim-reset').addEventListener('click', () => {
     sortMode = ''; movies = [...originalMovies];
+    triedModes.clear();
+    document.getElementById('algorithm-conclusion').hidden = true;
     document.querySelectorAll('.sort-choice').forEach(button => { button.classList.remove('sort-active'); button.setAttribute('aria-pressed', 'false'); });
     resetSimulation();
   });
