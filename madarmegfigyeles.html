@@ -99,18 +99,48 @@
       <section class="lesson-section tracked" id="algoritmus" data-step="algoritmus">
         <p class="step-kicker">04 · Az algoritmus felfedezése</p>
         <h2>Számláljuk meg az előfordulásokat!</h2>
-        <p>A fajokat 1-től 5-ig számozzuk, ezért készítünk egy 6 elemű számlálólistát, a 0-s indexet pedig üresen hagyjuk. Így nem kell fejben eltolni az indexeket: a 4-es fajhoz közvetlenül a 4-es indexű hely tartozik.</p>
         <h3>A feldolgozandó megfigyelések</h3>
-        <p>A program balról jobbra halad, és egyszerre mindig egy számot dolgoz fel:</p>
-        <div class="data-strip observation-strip" id="observation-strip" aria-label="Az eredeti madármegfigyelések sorozata"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
+        <p>Adott a következő megfigyelési sorozat:</p>
+        <div class="data-strip" aria-label="Az eredeti madármegfigyelések sorozata"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
+
+        <h3>Először gondold végig!</h3>
+        <p>Minden faj mellett nyilván kell tartanunk, hogy eddig hányszor találkoztunk vele. Miben és hogyan tárolhatnánk ezeket a darabszámokat?</p>
+
+        <fieldset class="quiz-card" id="storage-question">
+          <legend>1. Hogyan tárolnád egyszerre az öt madárfaj előfordulásainak számát?</legend>
+          <label><input type="radio" name="storage-choice" value="a"> Egyetlen változóban</label>
+          <label><input type="radio" name="storage-choice" value="b"> Minden megfigyelést külön változóban</label>
+          <label><input type="radio" name="storage-choice" value="c"> Egy számlálólistában</label>
+          <button class="discovery-check" type="button" data-question-id="storage" data-answer="c" data-target="storage-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="storage-feedback" role="status"></p>
+        </fieldset>
+
+        <fieldset class="quiz-card" id="size-question">
+          <legend>2. Ha a faj számát közvetlenül indexként szeretnénk használni, hány elemű listára van szükségünk?</legend>
+          <label><input type="radio" name="size-choice" value="a"> 5 eleműre</label>
+          <label><input type="radio" name="size-choice" value="b"> 6 eleműre</label>
+          <label><input type="radio" name="size-choice" value="c"> Annyi eleműre, ahány megfigyelésünk van</label>
+          <button class="discovery-check" type="button" data-question-id="size" data-answer="b" data-target="size-feedback">Válasz ellenőrzése</button>
+          <p class="feedback" id="size-feedback" role="status"></p>
+        </fieldset>
+
+        <div id="counter-solution" hidden>
+          <h3>A számlálólista létrehozása</h3>
+          <p>Egy 6 elemű listát készítünk, amely kezdetben mindenhol nullát tartalmaz:</p>
+          <div class="code-block"><pre><code>gyakorisag = [0, 0, 0, 0, 0, 0]</code></pre></div>
+          <p>A 0-s helyet nem használjuk. Így a faj azonosítója egyben a lista indexe is: például a 4-es faj darabszámát a <code>gyakorisag[4]</code> tárolja.</p>
+          <h3>Most nézzük meg működés közben!</h3>
+          <p>A program balról jobbra halad, és egyszerre mindig egy megfigyelést dolgoz fel. A gomb minden kattintásra kiemeli az aktuális számot, és növeli a hozzá tartozó számlálót.</p>
+        </div>
+        <div class="data-strip observation-strip" id="observation-strip" aria-label="Az animációban feldolgozott madármegfigyelések"><span>1</span><span>4</span><span>4</span><span>4</span><span>5</span><span>3</span></div>
         <div class="simulator" aria-live="polite">
           <div class="sim-header"><div><span>Aktuális megfigyelés</span><strong id="current-bird">–</strong></div><div><span>Feldolgozva</span><strong><b id="sim-step">0</b> / 6</strong></div></div>
           <div class="counter-grid" id="counter-grid">
             <div><span>Faj</span><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b></div>
             <div><span>Darab</span><b id="count-1">0</b><b id="count-2">0</b><b id="count-3">0</b><b id="count-4">0</b><b id="count-5">0</b></div>
           </div>
-          <p id="sim-explanation">Kattints a „Következő megfigyelés” gombra!</p>
-          <div class="sim-actions"><button class="button primary" id="sim-next" type="button">Következő megfigyelés</button><button class="button secondary" id="sim-reset" type="button">Újrakezdés</button></div>
+          <p id="sim-explanation">Először válaszolj helyesen a fenti két kérdésre!</p>
+          <div class="sim-actions"><button class="button primary" id="sim-next" type="button" disabled>Következő megfigyelés</button><button class="button secondary" id="sim-reset" type="button" disabled>Újrakezdés</button></div>
         </div>
         <div class="algorithm-steps">
           <div><span>1</span><p>Hozz létre egy nullákkal feltöltött számlálólistát.</p></div>
@@ -232,7 +262,7 @@ print(leggyakoribb_madar(madarak))</code></pre>
         </div>
         <div class="runtime-conclusion">
           <span>Végeredmény</span><strong>O(n)</strong>
-          <p>A legtöbb munka a megfigyelések végigjárása. Minden más rész csak néhány állandó lépés. Emiatt a teljes futási idő <strong>O(n)</strong>: kétszer hosszabb listánál nagyjából kétszer annyi elemet dolgozunk fel.</p>
+          <p>A legtöbb munkát a megfigyelések végigjárása jelenti. Minden más rész csak néhány állandó lépésből áll. Emiatt a teljes futási idő <strong>O(n)</strong>: kétszer annyi megfigyelés esetén a program nagyjából kétszer annyi műveletet végez, ezért a futási ideje is körülbelül a kétszeresére nő.</p>
         </div>
         <button class="mark-done" type="button" data-complete="futasido">Megértettem a futási időt</button>
       </section>
@@ -264,5 +294,60 @@ print(leggyakoribb_madar(madarak))</code></pre>
   <footer><p>Készítette: Molnár Sándor · SZTE Informatikatanár MA · 2026</p></footer>
   <script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script>
   <script src="lesson.js"></script>
+  <script>
+    (function () {
+      const solved = { storage: false, size: false };
+      const explanations = {
+        storage: {
+          answer: 'Egy számlálólistában',
+          why: 'A lista minden fajhoz külön darabszámot tud tárolni, és egy ciklussal könnyen módosítható.'
+        },
+        size: {
+          answer: '6 eleműre',
+          why: 'A lista indexelése 0-tól kezdődik. Ahhoz, hogy az 5-ös indexet is használhassuk, a listának hat eleműnek kell lennie.'
+        }
+      };
+
+      function unlockSimulator() {
+        if (!solved.storage || !solved.size) return;
+
+        document.getElementById('counter-solution').hidden = false;
+        document.getElementById('sim-next').disabled = false;
+        document.getElementById('sim-reset').disabled = false;
+        document.getElementById('sim-explanation').textContent =
+          'Kattints a „Következő megfigyelés” gombra!';
+      }
+
+      document.querySelectorAll('.discovery-check').forEach(function (button) {
+        button.addEventListener('click', function () {
+          const fieldset = button.closest('fieldset');
+          const selected = fieldset.querySelector('input:checked');
+          const feedback = document.getElementById(button.dataset.target);
+          const questionId = button.dataset.questionId;
+          const explanation = explanations[questionId];
+
+          if (!selected) {
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Először válassz egy lehetőséget!';
+            return;
+          }
+
+          if (selected.value === button.dataset.answer) {
+            solved[questionId] = true;
+            feedback.className = 'feedback correct';
+            feedback.textContent = 'Helyes válasz.\nMiért? ' + explanation.why;
+            unlockSimulator();
+          } else {
+            solved[questionId] = false;
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Ez most nem jó.\nA te válaszod: ' +
+              selected.parentElement.textContent.trim() +
+              '\nHelyes válasz: ' + explanation.answer +
+              '\nMiért? ' + explanation.why;
+          }
+        });
+      });
+    }());
+  </script>
 </body>
 </html>
